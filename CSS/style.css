@@ -1,0 +1,79 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    font-family: 'Times New Roman', Times, serif, sans-serif;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../Images/a3.jpg') no-repeat center center/cover;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 50px;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.left-text h1 {
+    font-size: 85px;
+    color: #d4a017;
+    font-family: Arial, sans-serif;
+}
+
+.form-box {
+    background-color: rgba(0, 30, 30, 0.8);
+    padding: 30px;
+    border-radius: 15px;
+    width: 400px;
+    color: white;
+}
+
+.form-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-box input,
+.form-box textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 15px;
+    border: none;
+    outline: none;
+}
+select{
+     width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 15px;
+    border: none;
+    outline: none;
+}
+
+.form-box label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.form-box button {
+    background-color: #d4a017;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 40px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 50%;
+    margin: 0 25%;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.form-box button:hover {
+    background-color: #b38600;
+}

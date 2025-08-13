@@ -70,8 +70,4 @@ input {
     margin-top: 15px;
 }
 
-.socials img {
-    width: 30px;
-    margin: 5px;
-    cursor: pointer;
-}
+

@@ -1,0 +1,127 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* NAVBAR */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    z-index: 1000;
+}
+
+.navbar img {
+    height: 50px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+    color: #FFD700;
+}
+
+.btn-login {
+    background: #FFD700;
+    padding: 8px 15px;
+    border-radius: 5px;
+    color: black !important;
+}
+
+/* CARROUSEL */
+.carousel {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.slides {
+    height: 100%;
+}
+
+.slide {
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    display: none;
+    position: relative;
+}
+
+.slide.active {
+    display: block;
+}
+
+.overlay {
+    background: rgba(0, 0, 0, 0.5); /* assombrir l'image */
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.caption {
+    position: absolute;
+    bottom: 50px;
+    left: 50px;
+    font-size: 2em;
+    color: white;
+    max-width: 500px;
+}
+
+/* MISSIONS */
+.missions {
+    display: flex;
+    justify-content: center;
+    padding: 50px;
+    background: #f4f4f4;
+}
+
+.mission-card {
+    background: white;
+    padding: 20px;
+    margin: 0 15px;
+    width: 250px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+
+.mission-card h3 {
+    margin-bottom: 10px;
+    color: #2E8B57;
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #222;
+}
+footer {
+    background: #f1f1f1;
+    padding: 20px;
+}
+.footer-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+.footer-logo img {
+    border-radius: 10px;
+}

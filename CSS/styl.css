@@ -23,11 +23,14 @@ body{
 .navbar{
   position:fixed; top:0; left:0; right:0; height:var(--nav-h);
   display:flex; align-items:center; justify-content:space-between;
-  padding:12px 28px; background:rgba(0,0,0,.6); color:#fff; z-index:1000;
+  padding:12px 28px; 
+  background:rgba(0,0,0,.6); 
+  color:#fff; 
+  z-index:1000;
   backdrop-filter:saturate(120%) blur(4px);
 }
 .logo{
-    height:44px; 
+    height:70px; 
     width:auto; 
     border-radius:6px; 
     margin-right:10px;
@@ -64,6 +67,7 @@ body{
   height:calc(100vh - var(--nav-h)); 
   margin-top:var(--nav-h); 
   overflow:hidden;
+  
 }
 .slide{
   position:absolute; 
@@ -228,10 +232,11 @@ body{
     gap:10px; 
     align-items:center; 
     justify-content:center;
+    background-color: #000;
 }
 .join-socials img{
-    width:28px; 
-    height:28px; 
+    width:20px; 
+    height:20px; 
     object-fit:contain;
 }
 

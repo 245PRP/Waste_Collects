@@ -1,4 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASTE Collect Dashboard</title>
+    <link rel="stylesheet" href="../CSS/dashstyle.css">
 
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="../Images/1.png" alt="Logo Waste Collect">
+            <h1>WASTE <span>Collect</span></h1>
+        </div>
+        <ul>
+            <li><i class="fa fa-home"></i> Accueil</li>
+            <li><i class="fa fa-map-marker-alt"></i> Gestion des Points de Collecte</li>
+            <li><i class="fa fa-truck"></i> Tournées de ramassage</li>
+            <li><i class="fa fa-chart-bar"></i> Analyse Statistiques</li>
+            <li><i class="fa fa-cog"></i> Configuration</li>
+            <li><i class="fa fa-bell"></i> Notifications</li>
+            <li><i class="fa fa-sign-out-alt"></i> Déconnexion</li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <header>
+            <div class="search-bar">
+                <i class="fa fa-search"></i>
+                <input type="text" placeholder="Rechercher">
+            </div>
+            <div class="notif">
+                <i class="fa fa-bell"></i>
+                <span>WASTE Collect</span>
+            </div>
+        </header>
+
+        <div class="stats">
+            <div class="card">
+                <h3>Points de collecte Saturés</h3>
+                <p class="number">20</p>
+            </div>
+            <div class="card">
+                <h3>Points de collecte Ajoutés</h3>
+                <p class="number plus">+15</p>
+            </div>
+            <div class="card">
+                <h3>Points de collecte Supprimés</h3>
+                <p class="number minus">-5</p>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>NOM</th>
+                            <th>MOTIF DE SIGNALEMENT</th>
+                            <th>LIEUX</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>NOUFEYA VICTOIRE</td>
+                            <td class="status broken">Cassé</td>
+                            <td>Yassa</td>
+                        </tr>
+                        <tr>
+                            <td>MBOUTOU KAREYCE</td>
+                            <td class="status full">Plein</td>
+                            <td>Marché Central</td>
+                        </tr>
+                        <tr>
+                            <td>MBOENE VANELLE</td>
+                            <td class="status absent">Absent</td>
+                            <td>Dakar</td>
+                        </tr>
+                        <tr>
+                            <td>SCHEMIMA "P"</td>
+                            <td class="status full">Plein</td>
+                            <td>Bonamoussadi</td>
+                        </tr>
+                        <tr>
+                            <td>NYA JACQUES</td>
+                            <td class="status tipped">Renversé</td>
+                            <td>Yassa</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
 
 
 

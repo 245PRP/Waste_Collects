@@ -1,127 +1,124 @@
-/* RESET */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+:root{
+  --accent: #2E8B57;    /* vert foncé */
+  --pale:   #a2d5ac;    /* vert pâle pour le texte sur les images */
+  --gold:   #D4A017;
+  --ink:    #222;
+  --muted:  #f4f4f4;
+  --nav-h:  72px;
 }
+
+/* Reset */
+*{margin:0; padding:0; box-sizing:border-box}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:#111; background:#fff}
 
 /* NAVBAR */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 50px;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    z-index: 1000;
+.navbar{
+  position:fixed; top:0; left:0; right:0; height:var(--nav-h);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 28px; background:rgba(0,0,0,.6); color:#fff; z-index:1000;
+  backdrop-filter:saturate(120%) blur(4px);
 }
-
-.navbar img {
-    height: 50px;
-}
-
-.navbar a {
-    color: white;
-    text-decoration: none;
-    margin: 0 15px;
-    font-weight: bold;
-    transition: color 0.3s ease;
-}
-
-.navbar a:hover {
-    color: #FFD700;
-}
-
-.btn-login {
-    background: #FFD700;
-    padding: 8px 15px;
-    border-radius: 5px;
-    color: black !important;
-}
+.logo{height:44px; width:auto; border-radius:6px; margin-right:10px}
+.brand{display:flex; align-items:center; gap:12px; color:#fff}
+.menu{display:flex; align-items:center; gap:18px}
+.menu a{color:#fff; text-decoration:none; font-weight:600}
+.menu a:hover{color:var(--gold)}
+.btn-login{background:var(--gold); color:#000 !important; padding:8px 14px; border-radius:10px}
 
 /* CARROUSEL */
-.carousel {
-    height: 100vh;
-    position: relative;
-    overflow: hidden;
+.carousel{
+  position:relative; height:calc(100vh - var(--nav-h)); margin-top:var(--nav-h); overflow:hidden;
 }
+.slide{
+  position:absolute; inset:0; opacity:0; transition:opacity .8s ease; pointer-events:none;
+}
+.slide.is-active{opacity:1; pointer-events:auto}
+.slide img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.overlay{
+  position:absolute; inset:0; background:rgba(0,0,0,.55); /* assombrir l'image */
+}
+.caption{
+  position:absolute; left:min(6vw,60px); bottom:min(10vh,80px); right:min(6vw,60px);
+  color:var(--pale); text-shadow:0 2px 12px rgba(0,0,0,.45);
+}
+.caption h1{font-size:clamp(28px,5vw,48px); line-height:1.1; font-weight:800; margin-bottom:8px}
+.caption p{font-size:clamp(14px,2.3vw,18px)}
 
-.slides {
-    height: 100%;
+/* Contrôles carrousel */
+.ctrl{
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:42px; height:42px; border:none; border-radius:999px;
+  background:rgba(0,0,0,.45); color:#fff; display:grid; place-items:center;
+  cursor:pointer; z-index:3;
 }
+.ctrl:hover{background:rgba(0,0,0,.7)}
+.prev{left:14px} .next{right:14px}
+.dots{
+  position:absolute; left:0; right:0; bottom:16px; display:flex; gap:8px; justify-content:center; z-index:3
+}
+.dot{width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,.55); cursor:pointer}
+.dot.is-active{background:var(--gold)}
 
-.slide {
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    display: none;
-    position: relative;
+/* NOS MISSIONS */
+.section{padding:54px 20px; background:#fff}
+.section-title{
+  text-align:center; font-size:clamp(22px,3.6vw,28px); color:var(--ink); margin-bottom:24px; font-weight:800;
 }
+.missions-grid{
+  display:grid; gap:18px; max-width:1100px; margin:0 auto;
+  grid-template-columns:repeat(4, minmax(200px, 1fr));
+}
+.mission-card{
+  background:#e9f5ee; /* carreau coloré clair */
+  border:1px solid #d2ebdc;
+  border-radius:16px; padding:22px; min-height:150px;
+  box-shadow:0 6px 20px rgba(0,0,0,.06);
+}
+.mission-card h3{color:var(--accent); margin-bottom:8px; font-size:20px}
+.mission-card p{color:#334; line-height:1.5}
 
-.slide.active {
-    display: block;
+/* REJOIGNEZ-NOUS */
+.join{
+  background: linear-gradient(180deg, #ffffff 0%, #f7faf8 100%);
+  padding:48px 20px;
 }
+.join-content{
+  max-width:900px; margin:0 auto; text-align:center;
+}
+.join h2{font-size:clamp(22px,3.6vw,28px); color:var(--accent); margin-bottom:10px}
+.join p{color:#334; margin-bottom:18px}
+.join-actions{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:16px}
+.btn{
+  display:inline-block; padding:10px 18px; border-radius:10px; text-decoration:none; font-weight:700;
+}
+.btn.primary{background:var(--accent); color:#fff}
+.btn.outline{border:2px solid var(--accent); color:var(--accent)}
+.join-socials{display:flex; gap:10px; align-items:center; justify-content:center}
+.join-socials img{width:28px; height:28px; object-fit:contain}
 
-.overlay {
-    background: rgba(0, 0, 0, 0.5); /* assombrir l'image */
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
+/* FOOTER — NOIR */
+.site-footer{
+  background:#000; color:#ddd; padding:28px 20px; margin-top:0;
 }
+.footer-grid{
+  max-width:1100px; margin:0 auto; display:grid; gap:20px;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr;
+}
+.footer-brand{display:flex; gap:12px; align-items:flex-start}
+.footer-brand img{width:64px; height:auto; border-radius:8px; background:#fff}
+.foot-title{color:#fff; font-weight:800; margin-bottom:8px}
+.footer-col a, .footer-col p{color:#ddd; text-decoration:none; display:block; margin:4px 0}
+.footer-col a:hover{color:#fff}
+.foot-note{text-align:center; margin-top:16px; color:#888; font-size:14px}
 
-.caption {
-    position: absolute;
-    bottom: 50px;
-    left: 50px;
-    font-size: 2em;
-    color: white;
-    max-width: 500px;
+/* Responsive */
+@media (max-width:1000px){
+  .missions-grid{grid-template-columns:repeat(2, minmax(200px,1fr))}
+  .footer-grid{grid-template-columns:1fr 1fr}
 }
-
-/* MISSIONS */
-.missions {
-    display: flex;
-    justify-content: center;
-    padding: 50px;
-    background: #f4f4f4;
-}
-
-.mission-card {
-    background: white;
-    padding: 20px;
-    margin: 0 15px;
-    width: 250px;
-    text-align: center;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-}
-
-.mission-card h3 {
-    margin-bottom: 10px;
-    color: #2E8B57;
-}
-
-/* FOOTER */
-footer {
-    text-align: center;
-    padding: 20px;
-    color: #222;
-}
-footer {
-    background: #f1f1f1;
-    padding: 20px;
-}
-.footer-content {
-    display: flex;
-    justify-content: space-around;
-    align-items: flex-start;
-    flex-wrap: wrap;
-}
-.footer-logo img {
-    border-radius: 10px;
+@media (max-width:600px){
+  .missions-grid{grid-template-columns:1fr}
+  .menu{gap:12px}
 }

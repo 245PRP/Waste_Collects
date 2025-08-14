@@ -1,85 +1,139 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page d'accueil - Collecte de Déchets</title>
-    <link rel="stylesheet" href="../CSS/styl.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Accueil — Gestion des points de collecte</title>
+  <link rel="stylesheet" href="../CSS/styl.css" />
 </head>
 <body>
 
-    <!-- NAVBAR -->
-    <header class="navbar">
-        <div class="logo">
-            <img src="../Images/1.png" alt="Logo">
-        </div>
-        <nav>
-            <a href="index.html">Accueil</a>
-            <a href="index.html">Nos Missions</a>
-            <a href="#">Point de collecte</a>
-            <a href="#" class="btn-login">Se connecter</a>
-        </nav>
-    </header>
-
-    <!-- CARROUSEL -->
-    <section class="carousel">
-        <div class="slides">
-            <div class="slide active" style="background-image: url('../Images/v2.jpg');">
-                <div class="overlay"></div>
-                <div class="caption">Protégeons notre planète, un geste à la fois</div>
-            </div>
-            <div class="slide" style="background-image: url('../Images/a2.jfif');">
-                <div class="overlay"></div>
-                <div class="caption">Recycler aujourd'hui, sauver demain</div>
-            </div>
-            <div class="slide" style="background-image: url('../Images/v3.jfif');">
-                <div class="overlay"></div>
-                <div class="caption">Agissons ensemble pour un avenir propre</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- MISSIONS -->
-    <section class="missions">
-        <div class="mission-card">
-            <h3>Collecte</h3>
-            <p>Nous récupérons les déchets aux points de collecte pour un traitement optimal.</p>
-        </div>
-        <div class="mission-card">
-            <h3>Tri</h3>
-            <p>Nous trions les déchets pour favoriser le recyclage et réduire la pollution.</p>
-        </div>
-        <div class="mission-card">
-            <h3>Recyclage</h3>
-            <p>Nous donnons une nouvelle vie aux matériaux grâce au recyclage.</p>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-content">
-        <div class="footer-logo">
-            <img src="../Images/1.png" alt="Logo" width="80">
-        </div>
-        <div>
-            <h4>Point de collecte</h4>
-            <p>Trouver un point de collecte</p>
-            <p>Signaler un problème</p>
-        </div>
-        <div>
-            <h4>Nos Missions</h4>
-            <p>Sensibilisation</p>
-            <p>Tri des déchets</p>
-        </div>
-        <div>
-            <h4>Nos Contacts</h4>
-            <p>690 42 09 53</p>
-            <p>677 62 84 01</p>
-        </div>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="brand">
+      <img src="1.png" alt="Logo" class="logo">
+      <strong>Collecte & Propreté</strong>
     </div>
-        <p>© 2025 Collecte Verte. Tous droits réservés.</p>
-    </footer>
+    <nav class="menu">
+      <a href="#">Accueil</a>
+      <a href="#missions">Nos Missions</a>
+      <a href="#">Point de collecte</a>
+      <a href="#" class="btn-login">Se connecter</a>
+    </nav>
+  </header>
 
-    <script src="script.js"></script>
+  <!-- CARROUSEL -->
+  <section class="carousel" id="hero">
+    <div class="slide is-active">
+      <img src="images/slide1.jpg" alt="Déchets - slide 1">
+      <div class="overlay"></div>
+      <div class="caption">
+        <h1>Pratiquons des attitudes saines pour notre environnement</h1>
+        <p>Chaque geste de tri et de propreté compte pour Douala.</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <img src="images/slide2.jpg" alt="Déchets - slide 2">
+      <div class="overlay"></div>
+      <div class="caption">
+        <h1>Réduire, Réutiliser, Recycler</h1>
+        <p>Moins de déchets dans nos rues, plus de vie dans nos quartiers.</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <img src="images/slide3.jpg" alt="Déchets - slide 3">
+      <div class="overlay"></div>
+      <div class="caption">
+        <h1>Agissons ensemble, aujourd’hui</h1>
+        <p>Signalez, localisez, collectez — au service des citoyens.</p>
+      </div>
+    </div>
+
+    <!-- Contrôles -->
+    <button class="ctrl prev" aria-label="Précédent">❮</button>
+    <button class="ctrl next" aria-label="Suivant">❯</button>
+    <div class="dots" aria-label="Navigation du carrousel"></div>
+  </section>
+
+  <!-- NOS MISSIONS -->
+  <section class="section" id="missions">
+    <h2 class="section-title">Nos Missions</h2>
+    <div class="missions-grid">
+      <article class="mission-card">
+        <h3>Collecte Optimisée</h3>
+        <p>Planifier et suivre les tournées en temps réel pour éviter les doublons et réduire les coûts.</p>
+      </article>
+      <article class="mission-card">
+        <h3>Sensibilisation</h3>
+        <p>Informer les citoyens sur les bons gestes et encourager le signalement des problèmes.</p>
+      </article>
+      <article class="mission-card">
+        <h3>Traçabilité</h3>
+        <p>Mesurer les performances : zones collectées, délais d’intervention, efficacité des équipes.</p>
+      </article>
+      <article class="mission-card">
+        <h3>Recyclage</h3>
+        <p>Donner une nouvelle vie aux matériaux pour réduire l’impact environnemental.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- REJOIGNEZ-NOUS -->
+  <section class="join">
+    <div class="join-content">
+      <h2>Rejoignez-nous</h2>
+      <p>Participez à la propreté de votre ville : créez un compte citoyen, devenez volontaire ou partenaire.</p>
+      <div class="join-actions">
+        <a href="#" class="btn primary">Créer un compte</a>
+        <a href="#" class="btn outline">Devenir partenaire</a>
+      </div>
+      <div class="join-socials">
+        <span>Ou continuez avec :</span>
+        <img src="images/facebook.png" alt="Facebook">
+        <img src="images/gmail.png" alt="Gmail">
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER (NOIR) -->
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="1.png" alt="Logo">
+        <div>
+          <div class="foot-title">Collecte & Propreté</div>
+          <p>Une ville propre commence par un geste simple.</p>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <div class="foot-title">Point de collecte</div>
+        <a href="#">Trouver un point de collecte</a>
+        <a href="#">Signaler un problème</a>
+        <a href="#">Consulter la carte</a>
+      </div>
+
+      <div class="footer-col">
+        <div class="foot-title">Nos Missions</div>
+        <a href="#missions">Collecte optimisée</a>
+        <a href="#missions">Sensibilisation</a>
+        <a href="#missions">Traçabilité</a>
+        <a href="#missions">Recyclage</a>
+      </div>
+
+      <div class="footer-col">
+        <div class="foot-title">Nos Contacts</div>
+        <p>📞 690 42 09 53</p>
+        <p>📞 677 62 84 01</p>
+        <p>✉️ contact@collecte-verte.cm</p>
+        <p>📍 Douala, Cameroun</p>
+      </div>
+    </div>
+    <div class="foot-note">© 2025 — Tous droits réservés.</div>
+  </footer>
+
+  <script src="script.js" defer></script>
 </body>
 </html>

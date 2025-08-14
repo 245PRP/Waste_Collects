@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASTE Collect Dashboard</title>
+    <link rel="stylesheet" href="../CSS/dashstyle.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="../Images/1.png" alt="WASTE Collect">
+            </div>
+            <nav>
+                <ul>
+                    <li>Accueil</li>
+                    <li>Gestion des Points de Collecte</li>
+                    <li>Tournées de ramassage</li>
+                    <li>Analyse Statistiques</li>
+                    <li>Configuration</li>
+                    <li>Notifications</li>
+                    <li>Déconnexion</li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header>
+                <input type="text" placeholder="Rechercher">
+                <div class="notifications">1</div>
+            </header>
+
+            <section class="stats">
+                <div class="card">Points saturés: <?php echo $stats['satures']; ?></div>
+                <div class="card">Points ajoutés: +<?php echo $stats['ajoutes']; ?></div>
+                <div class="card">Points supprimés: -<?php echo $stats['supprimes']; ?></div>
+            </section>
+
+            <section class="table-map">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Motif</th>
+                                <th>Lieu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($points as $point): ?>
+                            <tr>
+                                <td><?= $point['nom'] ?></td>
+                                <td class="<?= strtolower($point['motif']) ?>"><?= $point['motif'] ?></td>
+                                <td><?= $point['lieu'] ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="map"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="../Javascript/scriptdash.js"></script>
+</body>
+</html>

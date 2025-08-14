@@ -1,11 +1,354 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WASTE Collect — Tableau de bord</title>
+
+<!-- CSS externe -->
+<link rel="stylesheet" href="../CSS/dashstyle.css" />
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">
+        <i class="fa-solid fa-recycle" style="font-size:64px"></i>
+      </div>
+      <div class="title">
+        <b>WASTE</b>
+        <span>Collect</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-btn" href="#"><i class="fa-solid fa-house"></i>Accueil</a>
+      <a class="nav-btn" href="#"><i class="fa-solid fa-location-dot"></i>Gestion des Points de Collecte</a>
+      <a class="nav-btn" href="#"><i class="fa-solid fa-truck"></i>Tournées de ramassage</a>
+      <a class="nav-btn" href="#"><i class="fa-solid fa-chart-column"></i>Analyse Statistiques</a>
+      <a class="nav-btn" href="#"><i class="fa-solid fa-gear"></i>Configuration</a>
+      <a class="nav-btn" href="#"><i class="fa-solid fa-bell"></i>Notifications</a>
+      <div class="nav-spacer"></div>
+      <a class="nav-btn logout" href="#"><i class="fa-solid fa-right-from-bracket"></i>Déconnexion</a>
+    </nav>
+  </aside>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input id="searchInput" type="search" placeholder="Rechercher…" />
+    </div>
+    <div class="app-name">WASTE Collect</div>
+    <div class="bell"><i class="fa-regular fa-bell"></i></div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- STATS -->
+    <section class="stats">
+      <article class="stat">
+        <div class="label">Points de collecte Saturés</div>
+        <div class="value">20</div>
+      </article>
+      <article class="stat">
+        <div class="label">Points de collecte Ajoutés</div>
+        <div class="value">+15</div>
+      </article>
+      <article class="stat">
+        <div class="label">Points de collecte Supprimés</div>
+        <div class="value">-5</div>
+      </article>
+    </section>
+
+    <!-- TABLE + MAP -->
+    <section class="grid">
+      <!-- TABLE -->
+      <article class="card">
+        <div class="table-wrap">
+          <table id="signalsTable" aria-label="Signaux">
+            <thead>
+              <tr>
+                <th>NOM</th>
+                <th>MOTIF DE SIGNALEMENT</th>
+                <th>LIEUX</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-place="Yassa" data-status="cassé">
+                <td>NOUFEYA VICTOIRE</td>
+                <td class="status st-casse">Cassé</td>
+                <td>Yassa</td>
+              </tr>
+              <tr data-place="Marché Central" data-status="plein">
+                <td>MBOUTOU KAREYCE</td>
+                <td class="status st-plein">Plein</td>
+                <td>Marché Central</td>
+              </tr>
+              <tr data-place="Dakar" data-status="absent">
+                <td>MBOENE VANELLE</td>
+                <td class="status st-absent">Absent</td>
+                <td>Dakar</td>
+              </tr>
+              <tr data-place="Bonamoussadi" data-status="plein">
+                <td>SCHEMIMA "P"</td>
+                <td class="status st-plein">Plein</td>
+                <td>Bonamoussadi</td>
+              </tr>
+              <tr data-place="Yassa" data-status="renversé">
+                <td>NYA JACQUES</td>
+                <td class="status st-renverse">Renversé</td>
+                <td>Yassa</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <!-- MAP -->
+      <article class="card">
+        <div class="map-head">
+          <div class="title">Rechercher</div>
+          <div>
+            <i class="fa-solid fa-location-crosshairs"></i>
+          </div>
+        </div>
+        <div id="map"></div>
+      </article>
+    </section>
+  </main>
+
+<!-- Scripts externes -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../Javascript/dashscript.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<!DOCTYPE html>
+<html lang="fr">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WASTE Collect Dashboard</title>
     <link rel="stylesheet" href="../CSS/dashstyle.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
 </head>
 <body>
     <div class="dashboard">

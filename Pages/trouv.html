@@ -1,8 +1,30 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Points de collecte</title>
-    <link rel="stylesheet" href="../CSS/trouv.css">
-    <link rel="stylesheet" href="https://unpkg.com">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Points de collecte</title>
+        <link rel="stylesheet" href="../CSS/trouv.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    </head>
+    <body>
+        <div class="container">
+            <!--section image texte-->
+            <div class="left-section">
+                <div class="overlay">
+                    <h1> Trouver un point de collecte <br> Proche de chez vous</h1>
+                    <div class="buttons">
+                        <button id="btn-search">Rechercher</button>
+                        <button id="btn-geo">Me géolocaliser</button>
+                    </div>
+                </div>
+            </div>
+            <!--section droite pour la carte-->
+            <div class="right-section">
+                <div id="map"></div>
+            </div>
+        </div>
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"> </script>
+            <script src="../Javascript/trouvscript.js"></script>
+    </body>
 </html>

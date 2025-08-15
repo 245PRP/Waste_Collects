@@ -70,7 +70,7 @@ body{
   border:none; outline:none; width:100%; background:transparent; color:var(--text); font-size:15px;
 }
 .header-right{display:flex; align-items:center; gap:12px}
-.app-name{color:#fff; font-weight:700; white-space:nowrap}
+.app-name{color:#ffd37a; font-weight:700; white-space:nowrap}
 .bell-wrap{
   width:40px; height:40px; border-radius:50%; background:#fff; display:grid; place-items:center;
   box-shadow: var(--shadow);

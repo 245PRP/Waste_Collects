@@ -1,110 +1,350 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WASTE Collect Dashboard</title>
-    <link rel="stylesheet" href="../CSS/dashstyle.css">
-
-    <!-- Font Awesome pour les icônes -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WASTE Collect</title>
+  <link rel="stylesheet" href="../CSS/dashstyle.css" />
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
-    <div class="sidebar">
-        <div class="logo">
-            <img src="../Images/1.png" alt="Logo Waste Collect">
-            <h1>WASTE <span>Collect</span></h1>
-        </div>
-        <ul>
-            <li><i class="fa fa-home"></i> Accueil</li>
-            <li><i class="fa fa-map-marker-alt"></i> Gestion des Points de Collecte</li>
-            <li><i class="fa fa-truck"></i> Tournées de ramassage</li>
-            <li><i class="fa fa-chart-bar"></i> Analyse Statistiques</li>
-            <li><i class="fa fa-cog"></i> Configuration</li>
-            <li><i class="fa fa-bell"></i> Notifications</li>
-            <li><i class="fa fa-sign-out-alt"></i> Déconnexion</li>
-        </ul>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <!-- logo rond : remplace images/logo.png par ton image -->
+      <div class="logo-circle">
+        <img src="../Images/1.png" alt="WASTE Collect" />
+      </div>
+      <div class="brand-text">
+        <div class="brand-top">WASTE</div>
+        <div class="brand-bottom">Collect</div>
+      </div>
     </div>
 
-    <div class="main">
-        <header>
-            <div class="search-bar">
-                <i class="fa fa-search"></i>
-                <input type="text" placeholder="Rechercher">
-            </div>
-            <div class="notif">
-                <i class="fa fa-bell"></i>
-                <span>WASTE Collect</span>
-            </div>
-        </header>
+    <nav class="menu">
+      <a class="menu-item" href="#">
+        <img class="menu-icon" src="../Images/accueil.png" alt="" />
+        <span>Accueil</span>
+      </a>
+      <a class="menu-item" href="#">
+        <img class="menu-icon" src="../Images/page-de-calendrier-vide.png" alt="" />
+        <span>Gestion des Points de Collecte</span>
+      </a>
+      <a class="menu-item" href="#">
+        <img class="menu-icon" src="../Images/vehicule.png" alt="" />
+        <span>Tournées de ramassage</span>
+      </a>
+      <a class="menu-item" href="#">
+        <img class="menu-icon" src="../Images/graphique-a-barres.png" alt="" />
+        <span>Analyse Statistiques</span>
+      </a>
+      <a class="menu-item" href="#">
+        <img class="menu-icon" src="../Images/parametres-des-engrenages.png" alt="" />
+        <span>Configuration</span>
+      </a>
+      <a class="menu-item" href="#">
+        <img class="menu-icon" src="../Images/alarme.png" alt="" />
+        <span>Notifications</span>
+      </a>
+      <a class="menu-item" href="#">
+        <img class="menu-icon" src="../Images/se-deconnecter.png" alt="" />
+        <span>Déconnexion</span>
+      </a>
+    </nav>
+  </aside>
 
-        <div class="stats">
-            <div class="card">
-                <h3>Points de collecte Saturés</h3>
-                <p class="number">20</p>
-            </div>
-            <div class="card">
-                <h3>Points de collecte Ajoutés</h3>
-                <p class="number plus">+15</p>
-            </div>
-            <div class="card">
-                <h3>Points de collecte Supprimés</h3>
-                <p class="number minus">-5</p>
-            </div>
+  <!-- MAIN -->
+  <div class="main">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="search">
+        <img src="../Images/rechercher.png" class="search-icon" alt="" />
+        <input type="search" placeholder="Rechercher…" />
+      </div>
+      <div class="header-right">
+        <div class="app-name">WASTE Collect</div>
+        <div class="bell-wrap">
+          <img src="../Images/notification.png" alt="Notifications" />
         </div>
+      </div>
+    </header>
 
-        <div class="content">
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>NOM</th>
-                            <th>MOTIF DE SIGNALEMENT</th>
-                            <th>LIEUX</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>NOUFEYA VICTOIRE</td>
-                            <td class="status broken">Cassé</td>
-                            <td>Yassa</td>
-                        </tr>
-                        <tr>
-                            <td>MBOUTOU KAREYCE</td>
-                            <td class="status full">Plein</td>
-                            <td>Marché Central</td>
-                        </tr>
-                        <tr>
-                            <td>MBOENE VANELLE</td>
-                            <td class="status absent">Absent</td>
-                            <td>Dakar</td>
-                        </tr>
-                        <tr>
-                            <td>SCHEMIMA "P"</td>
-                            <td class="status full">Plein</td>
-                            <td>Bonamoussadi</td>
-                        </tr>
-                        <tr>
-                            <td>NYA JACQUES</td>
-                            <td class="status tipped">Renversé</td>
-                            <td>Yassa</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <!-- STATS -->
+    <section class="stats">
+      <article class="stat">
+        <div class="stat-title">Points de collecte Saturés</div>
+        <div class="stat-value">20</div>
+      </article>
+      <article class="stat">
+        <div class="stat-title">Points de collecte Ajoutés</div>
+        <div class="stat-value">+15</div>
+      </article>
+      <article class="stat">
+        <div class="stat-title">Points de collecte Supprimés</div>
+        <div class="stat-value">-5</div>
+      </article>
+    </section>
 
-            <div id="map"></div>
+    <!-- TABLE + MAP -->
+    <section class="grid">
+      <!-- TABLE -->
+      <div class="card table-card">
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  NOM
+                </th>
+                <th>
+                  <img src="images/headers/motif.png" alt="MOTIF DE SIGNALEMENT" />
+                </th>
+                <th>
+                  <img src="images/headers/lieux.png" alt="LIEUX" />
+                </th>
+                <th>
+                  <img src="images/headers/date.png" alt="DATE" />
+                </th>
+                <th>
+                  <img src="images/headers/heure.png" alt="HEURE" />
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>NOUFEYA VICTOIRE</td>
+                <td><span class="badge badge-casse">Cassé</span></td>
+                <td>Yassa</td>
+                <td>14/08/2025</td>
+                <td>10:32</td>
+              </tr>
+              <tr>
+                <td>MBOUTOU KAREYCE</td>
+                <td><span class="badge badge-plein">Plein</span></td>
+                <td>Marché Central</td>
+                <td>14/08/2025</td>
+                <td>09:18</td>
+              </tr>
+              <tr>
+                <td>MBOENE VANELLE</td>
+                <td><span class="badge badge-absent">Absent</span></td>
+                <td>Dakar</td>
+                <td>13/08/2025</td>
+                <td>16:47</td>
+              </tr>
+              <tr>
+                <td>SCHEMIMA "P"</td>
+                <td><span class="badge badge-plein">Plein</span></td>
+                <td>Bonamoussadi</td>
+                <td>13/08/2025</td>
+                <td>11:06</td>
+              </tr>
+              <tr>
+                <td>NYA JACQUES</td>
+                <td><span class="badge badge-renverse">Renversé</span></td>
+                <td>Yassa</td>
+                <td>12/08/2025</td>
+                <td>18:25</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-    </div>
+      </div>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="script.js"></script>
+      <!-- MAP -->
+      <div class="card map-card">
+        <div class="map-head">
+          <div class="map-title">Rechercher</div>
+          <img src="../Images/rechercher.png" alt="" class="map-gear" />
+        </div>
+        <div id="map"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Leaflet -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="../Javascript/dashscript.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

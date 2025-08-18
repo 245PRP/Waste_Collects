@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : lun. 18 août 2025 à 15:20
+-- Généré le : lun. 18 août 2025 à 19:29
 -- Version du serveur : 5.7.36
 -- Version de PHP : 7.4.26
 
@@ -29,24 +29,23 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `camion`;
 CREATE TABLE IF NOT EXISTS `camion` (
-  `id-cam` int(11) NOT NULL AUTO_INCREMENT,
-  `id-user` int(11) NOT NULL,
-  `imt` varchar(20) NOT NULL,
-  PRIMARY KEY (`id-cam`)
+  `id_cam` int(11) NOT NULL AUTO_INCREMENT,
+  `immatriculation` varchar(20) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  PRIMARY KEY (`id_cam`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `pointdecollecte`
+-- Structure de la table `point_collecte`
 --
 
-DROP TABLE IF EXISTS `pointdecollecte`;
-CREATE TABLE IF NOT EXISTS `pointdecollecte` (
-  `id-pt` int(11) NOT NULL AUTO_INCREMENT,
-  `id-user` int(11) NOT NULL,
-  `lieux` varchar(20) NOT NULL,
-  PRIMARY KEY (`id-pt`)
+DROP TABLE IF EXISTS `point_collecte`;
+CREATE TABLE IF NOT EXISTS `point_collecte` (
+  `id_pt` int(11) NOT NULL AUTO_INCREMENT,
+  `lieu` varchar(20) NOT NULL,
+  PRIMARY KEY (`id_pt`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -57,11 +56,14 @@ CREATE TABLE IF NOT EXISTS `pointdecollecte` (
 
 DROP TABLE IF EXISTS `signalement`;
 CREATE TABLE IF NOT EXISTS `signalement` (
-  `id-signal` int(11) NOT NULL AUTO_INCREMENT,
-  `id-user` int(11) NOT NULL,
-  `id-pt` int(11) NOT NULL,
-  `type` varchar(20) NOT NULL,
-  PRIMARY KEY (`id-signal`)
+  `id_sign` int(11) NOT NULL AUTO_INCREMENT,
+  `motif` varchar(20) NOT NULL,
+  `description` varchar(20) NOT NULL,
+  `date` date NOT NULL,
+  `heure` time(2) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `id_pt` int(11) NOT NULL,
+  PRIMARY KEY (`id_sign`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -72,13 +74,15 @@ CREATE TABLE IF NOT EXISTS `signalement` (
 
 DROP TABLE IF EXISTS `utilisateur`;
 CREATE TABLE IF NOT EXISTS `utilisateur` (
-  `id-user` int(11) NOT NULL AUTO_INCREMENT,
-  `nom` varchar(20) NOT NULL,
-  `admin` varchar(20) NOT NULL,
-  `citoyen` varchar(20) NOT NULL,
-  `chauffeur` varchar(20) NOT NULL,
+  `id_user` int(11) NOT NULL AUTO_INCREMENT,
+  `nom_user` varchar(20) NOT NULL,
+  `email` varchar(20) NOT NULL,
+  `telephone` int(11) NOT NULL,
+  `lieu` varchar(20) NOT NULL,
+  `role` varchar(20) NOT NULL,
+  `permis` varchar(20) DEFAULT NULL,
   `motdepasse` varchar(20) NOT NULL,
-  PRIMARY KEY (`id-user`)
+  PRIMARY KEY (`id_user`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 COMMIT;
 

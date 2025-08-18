@@ -69,5 +69,11 @@ input {
 .continue {
     margin-top: 15px;
 }
+select {
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+}
+
 
 

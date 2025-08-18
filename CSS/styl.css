@@ -23,14 +23,14 @@ body{
 .navbar{
   position:fixed; top:0; left:0; right:0; height:var(--nav-h);
   display:flex; align-items:center; justify-content:space-between;
-  padding:12px 28px; 
+  padding:18px 34px; 
   background:black; 
   color:#fff; 
   z-index:1000;
   /*backdrop-filter:saturate(160%) blur(8px);*/
 }
 .logo{
-    height:70px; 
+    height:60px; 
     width:auto; 
     border-radius:50px; 
     margin-right:10px;

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : ven. 15 août 2025 à 11:34
+-- Généré le : lun. 18 août 2025 à 15:20
 -- Version du serveur : 5.7.36
 -- Version de PHP : 7.4.26
 
@@ -24,12 +24,29 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Structure de la table `point_collecte`
+-- Structure de la table `camion`
 --
 
-DROP TABLE IF EXISTS `point_collecte`;
-CREATE TABLE IF NOT EXISTS `point_collecte` (
-  `id_pt` int(1) NOT NULL
+DROP TABLE IF EXISTS `camion`;
+CREATE TABLE IF NOT EXISTS `camion` (
+  `id-cam` int(11) NOT NULL AUTO_INCREMENT,
+  `id-user` int(11) NOT NULL,
+  `imt` varchar(20) NOT NULL,
+  PRIMARY KEY (`id-cam`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `pointdecollecte`
+--
+
+DROP TABLE IF EXISTS `pointdecollecte`;
+CREATE TABLE IF NOT EXISTS `pointdecollecte` (
+  `id-pt` int(11) NOT NULL AUTO_INCREMENT,
+  `id-user` int(11) NOT NULL,
+  `lieux` varchar(20) NOT NULL,
+  PRIMARY KEY (`id-pt`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -40,25 +57,27 @@ CREATE TABLE IF NOT EXISTS `point_collecte` (
 
 DROP TABLE IF EXISTS `signalement`;
 CREATE TABLE IF NOT EXISTS `signalement` (
-  `id_signal` int(11) NOT NULL AUTO_INCREMENT,
-  `id_pt` int(11) NOT NULL,
+  `id-signal` int(11) NOT NULL AUTO_INCREMENT,
   `id-user` int(11) NOT NULL,
-  PRIMARY KEY (`id_signal`),
-  KEY `fk_signalement_point_collecte` (`id_pt`)
+  `id-pt` int(11) NOT NULL,
+  `type` varchar(20) NOT NULL,
+  PRIMARY KEY (`id-signal`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `user`
+-- Structure de la table `utilisateur`
 --
 
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE IF NOT EXISTS `user` (
+DROP TABLE IF EXISTS `utilisateur`;
+CREATE TABLE IF NOT EXISTS `utilisateur` (
   `id-user` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(20) NOT NULL,
   `admin` varchar(20) NOT NULL,
   `citoyen` varchar(20) NOT NULL,
   `chauffeur` varchar(20) NOT NULL,
+  `motdepasse` varchar(20) NOT NULL,
   PRIMARY KEY (`id-user`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 COMMIT;

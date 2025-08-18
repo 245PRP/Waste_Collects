@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $motdepasse = $_POST["motdepasse"];
 
     // recherche de l’utilisateur par email dans les 3 colonnes
-    $sql = "SELECT * FROM user 
+    $sql = "SELECT * FROM utilisateur
             WHERE admin = :email OR citoyen = :email OR chauffeur = :email
             LIMIT 1";
     $stmt = $pdo->prepare($sql);
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // Redirection selon le rôle
         if ($role === "admin") {
-            header("Location: admin_dashboard.php");
+            header("Location: admin_dashboard.html");
         } elseif ($role === "citoyen") {
             header("Location: citoyen_trouv.php");
         } elseif ($role === "chauffeur") {

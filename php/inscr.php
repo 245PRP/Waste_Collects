@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     // Requête d'insertion
-    $sql = "INSERT INTO user (nom, admin, citoyen, chauffeur, mot_de_passe) 
+    $sql = "INSERT INTO utilisateur (nom, admin, citoyen, chauffeur, mot_de_passe) 
             VALUES (:nom, :admin, :citoyen, :chauffeur, :motdepasse)";
     $stmt = $pdo->prepare($sql);
 

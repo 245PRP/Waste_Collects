@@ -76,3 +76,9 @@ input {
     margin: 5px;
     cursor: pointer;
 }
+select {
+    padding: 8px;
+    border: none;
+    border-radius: 20px;
+    width: 108%;
+}

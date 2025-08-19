@@ -1,0 +1,472 @@
+<?php 
+ session_start();
+$nom=$_SESSION["nom_user"];
+$role=$_SESSION["role"];
+
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WASTE Collect</title>
+  <link rel="stylesheet" href="../CSS/dashstyle.css" />
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="../Icon/css/all.min.css">
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <!-- logo rond : remplace images/logo.png par ton image -->
+      <div class="logo-circle">
+        <img src="../Images/1.png" alt="WASTE Collect" />
+      </div>
+      
+    </div>
+
+    <nav class="menu">
+      <a class="menu-item" href="#">
+        <i class="fa fa-home"></i><span>Accueil</span>
+      </a>
+      <a class="menu-item" href="#">
+        <img class="menu-icon" src="../Images/page-de-calendrier-vide.png" alt="" />
+        <span>Gestion des Points de Collecte</span>
+      </a>
+      <a class="menu-item" href="#">
+        <img class="menu-icon" src="../Images/vehicule.png" alt="" />
+        <span>Tournées de ramassage</span>
+      </a>
+      <?php if(($role==="administrateur")){?>
+      
+      
+      <a class="menu-item" href="#">
+        <img class="menu-icon" src="../Images/graphique-a-barres.png" alt="" />
+        <span>Analyse Statistiques</span>
+      </a>
+      <a class="menu-item" href="#">
+        <img class="menu-icon" src="../Images/parametres-des-engrenages.png" alt="" />
+        <span>Configuration</span>
+      </a>
+      <a class="menu-item" href="#">
+        <img class="menu-icon" src="../Images/alarme.png" alt="" />
+        <span>Notifications</span>
+      </a>
+      <?php } ?>
+      <a class="menu-item" href="#">
+        <img class="menu-icon" src="../Images/se-deconnecter.png" alt="" />
+        <span>Déconnexion</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="search">
+        <img src="../Images/rechercher.png" class="search-icon" alt="" />
+        <input type="search" placeholder="Rechercher…" />
+      </div>
+      <div class="header-right">
+        <div class="bell-wrap">
+          <img src="../Images/notification.png" alt="Notifications" />
+        </div>
+        <div class="app-name"><?php echo $nom; ?></div>
+      </div>
+    </header>
+
+    <!-- STATS -->
+    <section class="stats">
+      <article class="stat">
+        <div class="stat-title">Points de collecte Saturés</div>
+        <div class="stat-value">20</div>
+      </article>
+      <article class="stat">
+        <div class="stat-title">Points de collecte Ajoutés</div>
+        <div class="stat-value">+15</div>
+      </article>
+      <article class="stat">
+        <div class="stat-title">Points de collecte Supprimés</div>
+        <div class="stat-value">-5</div>
+      </article>
+    </section>
+
+    <!-- TABLE + MAP -->
+    <section class="grid">
+      <!-- TABLE -->
+      <div class="card table-card">
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  NOM
+                </th>
+                <th>
+                  MOTIF DE SIGNALEMENT
+                </th>
+                <th>
+                  LIEUX
+                </th>
+                <th>
+                  DATE
+                </th>
+                <th>
+                 HEURE
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>NOUFEYA VICTOIRE</td>
+                <td><span class="badge badge-casse">Cassé</span></td>
+                <td>Yassa</td>
+                <td>14/08/2025</td>
+                <td>10:32</td>
+              </tr>
+              <tr>
+                <td>MBOUTOU KAREYCE</td>
+                <td><span class="badge badge-plein">Plein</span></td>
+                <td>Marché Central</td>
+                <td>14/08/2025</td>
+                <td>09:18</td>
+              </tr>
+              <tr>
+                <td>MBOENE VANELLE</td>
+                <td><span class="badge badge-absent">Absent</span></td>
+                <td>Dakar</td>
+                <td>13/08/2025</td>
+                <td>16:47</td>
+              </tr>
+              <tr>
+                <td>SCHEMIMA "P"</td>
+                <td><span class="badge badge-plein">Plein</span></td>
+                <td>Bonamoussadi</td>
+                <td>13/08/2025</td>
+                <td>11:06</td>
+              </tr>
+              <tr>
+                <td>NYA JACQUES</td>
+                <td><span class="badge badge-renverse">Renversé</span></td>
+                <td>Yassa</td>
+                <td>12/08/2025</td>
+                <td>18:25</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MAP -->
+      <div class="card map-card">
+        <div class="map-head">
+          <div class="map-title">Rechercher</div>
+          <img src="../Images/rechercher.png" alt="" class="map-gear" />
+        </div>
+        <div id="map"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Leaflet -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="../Javascript/dashscript.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASTE Collect Dashboard</title>
+    <link rel="stylesheet" href="../CSS/dashstyle.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="../Images/1.png" alt="WASTE Collect">
+            </div>
+            <nav>
+                <ul>
+                    <li>Accueil</li>
+                    <li>Gestion des Points de Collecte</li>
+                    <li>Tournées de ramassage</li>
+                    <li>Analyse Statistiques</li>
+                    <li>Configuration</li>
+                    <li>Notifications</li>
+                    <li>Déconnexion</li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header>
+                <input type="text" placeholder="Rechercher">
+                <div class="notifications">1</div>
+            </header>
+
+            <section class="stats">
+                <div class="card">Points saturés: <?php echo $stats['satures']; ?></div>
+                <div class="card">Points ajoutés: +<?php echo $stats['ajoutes']; ?></div>
+                <div class="card">Points supprimés: -<?php echo $stats['supprimes']; ?></div>
+            </section>
+
+            <section class="table-map">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Motif</th>
+                                <th>Lieu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($points as $point): ?>
+                            <tr>
+                                <td><?= $point['nom'] ?></td>
+                                <td class="<?= strtolower($point['motif']) ?>"><?= $point['motif'] ?></td>
+                                <td><?= $point['lieu'] ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="map"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="../Javascript/scriptdash.js"></script>
+</body>
+</html>

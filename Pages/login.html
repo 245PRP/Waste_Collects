@@ -7,14 +7,17 @@
 <link rel="stylesheet" href="../CSS/stylog.css">
 </head>
 <body>
-<div class="overlay"></div>
-<div class="form-container">
-    <h1>Bienvenue</h1>
-    <p>Connectez vous à votre compte</p>
-    <input type="email" placeholder="Entrer votre email">
-    <input type="password" placeholder="Entrer votre Mot de Passe">
-    <a href="#" class="forgot">Mot de passe oublié</a>
-    <a href="../Pages/trouv.html"><button class="btn">Connexion</button></a>
-</div>
+    
+    <div class="overlay"></div>
+    <div class="form-container">
+        <form action="../php/log.php" method="post">
+        <h1>Bienvenue</h1>
+        <p>Connectez vous à votre compte</p>
+        <input name="email" type="email" placeholder="Entrer votre email">
+        <input name="motdepasse" type="password" placeholder="Entrer votre Mot de Passe">
+        <a href="#" class="forgot">Mot de passe oublié</a>
+        <a href="../Pages/trouv.html"><button class="btn">Connexion</button></a>
+        </form>
+    </div>
 </body>
 </html>

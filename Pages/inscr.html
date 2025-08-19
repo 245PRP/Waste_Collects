@@ -4,26 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Inscription</title>
-<link rel="stylesheet" href="../CSS/stylinscr">
+<link rel="stylesheet" href="../CSS/stylinscr.css">
 </head>
 <body>
 <div class="overlay"></div>
 <div class="form-container">
+    <form action="../php/inscr.php" method="post">
     <h1>Inscrivez vous</h1>
     <p>Créer votre compte</p>
-    <input type="text" placeholder="Entrer votre nom">
-    <input type="email" placeholder="Entrer votre email">
-    <input type="telephone" placeholder="Entrer votre contact">
-    <input type="lieu" placeholder="Entrer votre lieu d'habitation">
+    <input name="nom_user" type="text" placeholder="Entrer votre nom">
+    <input name="email" type="email" placeholder="Entrer votre email">
+    <input name="telephone" type="telephone" placeholder="Entrer votre contact">
+    <input name="lieu" type="lieu" placeholder="Entrer votre lieu d'habitation">
      <select name="role" id="role" required>
                 <option value="administrateur" >administrateur</option>
                 <option value="citoyen" >citoyen</option>
                 <option value="chauffeur" >chauffeur</option>
         </select>
-
-    <input type="password" placeholder="Entrer votre Mot de Passe">
-    <a href="../Pages/dashboard.html"><button class="btn">S’inscrire</button></a>
-   
+    <input name="motdepasse" type="password" placeholder="Entrer votre Mot de Passe">
+    <input type="submit" value="S’inscrire" class="btn">
+    </form>
 </div>
 </body>
 </html>

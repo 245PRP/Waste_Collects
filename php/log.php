@@ -14,46 +14,43 @@ try {
 
 // Vérifier si le formulaire est soumis
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = trim($_POST["email"]);
+    $email = $_POST["email"];
     $motdepasse = $_POST["motdepasse"];
 
-    // recherche de l’utilisateur par email dans les 3 colonnes
-    $sql = "SELECT * FROM utilisateur
-            WHERE admin = :email OR citoyen = :email OR chauffeur = :email
-            LIMIT 1";
+    //  On récupère uniquement l’utilisateur par email
+    $sql = "SELECT * FROM utilisateur WHERE email = :email LIMIT 1";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([":email" => $email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user && password_verify($motdepasse, $user["mot_de_passe"])) {
-        // Déterminer le rôle
-        if (!empty($user["admin"]) && $user["admin"] === $email) {
-            $role = "admin";
-        } elseif (!empty($user["citoyen"]) && $user["citoyen"] === $email) {
-            $role = "citoyen";
-        } elseif (!empty($user["chauffeur"]) && $user["chauffeur"] === $email) {
-            $role = "chauffeur";
-        } else {
-            $role = "inconnu";
-        }
+    if ($user) {
+        //  Vérification du mot de passe haché
+        if (password_verify($motdepasse, $user["motdepasse"])) {
 
-        // Démarrer la session
-        session_start();
-        $_SESSION["id_user"] = $user["id_user"];
-        $_SESSION["nom"]     = $user["nom"];
-        $_SESSION["role"]    = $role;
+            // Démarrer la session
+            session_start();
+            $_SESSION["id_user"]  = $user["id_user"];
+            $_SESSION["nom_user"] = $user["nom_user"];
+            $_SESSION["role"]     = $user["role"];
 
-        // Redirection selon le rôle
-        if ($role === "admin") {
-            header("Location: admin_dashboard.html");
-        } elseif ($role === "citoyen") {
-            header("Location: citoyen_trouv.php");
-        } elseif ($role === "chauffeur") {
-            header("Location: chauffeur_dashboard.php");
+            $role = $_SESSION["role"];
+
+            //  Redirection selon le rôle
+            if ($role === "administrateur") {
+                header("Location: ../Pages/dashboard.php");
+            } elseif ($role === "citoyen") {
+                header("Location: ../Pages/trouv.html");
+            } elseif ($role === "chauffeur") {
+                header("Location: ../Pages/dashboard.php");
+            } else {
+                echo "Rôle non reconnu.";
+            }
+            exit();
+
         } else {
-            echo "Rôle non reconnu.";
+            // Mot de passe incorrect
+            echo " mot de passe incorrect.";
         }
-        exit();
     } else {
         echo "Email ou mot de passe incorrect.";
     }

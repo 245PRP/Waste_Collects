@@ -21,6 +21,19 @@ try{
         $role=$_POST['role'];
         $motdepasse=$_POST['motdepasse'];
 
+        //verification de l'unicité de l'email et s'il existe déjà 
+        $check = $cnx->prepare("SELECT id_user FROM utilisateur WHERE email = :email");
+        $check->execute([":email" => $email]);
+        if ($check->fetch()) {
+            die("⚠️ Cet email est déjà utilisé, veuillez en choisir un autre.");
+        }
+
+
+
+
+
+
+        // haqshage ou cryptage du mot de passe
         $hashedPassword=password_hash($motdepasse, PASSWORD_DEFAULT);
     }
      try {
@@ -30,7 +43,8 @@ try{
             $stmt->bindParam(':telephone', $telephone);
             $stmt->bindParam(':lieu', $lieu);
             $stmt->bindParam(':role', $role);
-            $stmt->bindParam(':motdepasse', $hashedPassword);
+            $stmt->bindParam(':motdepasse', $hashedPassword
+        );
         
         $stmt->execute();
     } catch (PDOException $e) {

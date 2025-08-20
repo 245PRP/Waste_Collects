@@ -1,8 +1,12 @@
 <?php 
  session_start();
+if(!$_SESSION['id_user']){
+  header('Location:../Pages/login.html');
+
+
+} 
 $nom=$_SESSION["nom_user"];
 $role=$_SESSION["role"];
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -13,7 +17,7 @@ $role=$_SESSION["role"];
   <link rel="stylesheet" href="../CSS/dashstyle.css" />
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="../Icon/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body>
   <!-- SIDEBAR -->
@@ -27,35 +31,35 @@ $role=$_SESSION["role"];
     </div>
 
     <nav class="menu">
-      <a class="menu-item" href="#">
-        <i class="fa fa-home"></i><span>Accueil</span>
+      <a class="menu-item" href="../Pages/dashboard.php">
+        <i class="fa-solid fa-house" style="color: #cfa13b"></i><span>Accueil</span>
       </a>
-      <a class="menu-item" href="#">
-        <img class="menu-icon" src="../Images/page-de-calendrier-vide.png" alt="" />
+      <a class="menu-item" href="../Pages/point.html">
+        <i class="fa-solid fa-calendar-check" style="color: #cfa13b"></i>
         <span>Gestion des Points de Collecte</span>
       </a>
       <a class="menu-item" href="#">
-        <img class="menu-icon" src="../Images/vehicule.png" alt="" />
+        <i class="fa-solid fa-truck" style="color: #cfa13b"></i>
         <span>Tournées de ramassage</span>
       </a>
       <?php if(($role==="administrateur")){?>
       
       
       <a class="menu-item" href="#">
-        <img class="menu-icon" src="../Images/graphique-a-barres.png" alt="" />
+        <i class="fa-solid fa-chart-column" style="color: #cfa13b"></i>
         <span>Analyse Statistiques</span>
       </a>
       <a class="menu-item" href="#">
-        <img class="menu-icon" src="../Images/parametres-des-engrenages.png" alt="" />
+        <i class="fa-solid fa-gears" style="color: #cfa13b"></i>
         <span>Configuration</span>
       </a>
       <a class="menu-item" href="#">
-        <img class="menu-icon" src="../Images/alarme.png" alt="" />
+        <i class="fa-solid fa-bell" style="color: #cfa13b"></i>
         <span>Notifications</span>
       </a>
       <?php } ?>
-      <a class="menu-item" href="#">
-        <img class="menu-icon" src="../Images/se-deconnecter.png" alt="" />
+      <a class="menu-item" href="../php/logout.php">
+        <i class="fa-solid fa-arrow-right-from-bracket" style="color: #cfa13b"></i>
         <span>Déconnexion</span>
       </a>
     </nav>
@@ -400,73 +404,3 @@ $role=$_SESSION["role"];
 
 
 
-<!--<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WASTE Collect Dashboard</title>
-    <link rel="stylesheet" href="../CSS/dashstyle.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
-</head>
-<body>
-    <div class="dashboard">
-        <aside class="sidebar">
-            <div class="logo">
-                <img src="../Images/1.png" alt="WASTE Collect">
-            </div>
-            <nav>
-                <ul>
-                    <li>Accueil</li>
-                    <li>Gestion des Points de Collecte</li>
-                    <li>Tournées de ramassage</li>
-                    <li>Analyse Statistiques</li>
-                    <li>Configuration</li>
-                    <li>Notifications</li>
-                    <li>Déconnexion</li>
-                </ul>
-            </nav>
-        </aside>
-        <main class="main-content">
-            <header>
-                <input type="text" placeholder="Rechercher">
-                <div class="notifications">1</div>
-            </header>
-
-            <section class="stats">
-                <div class="card">Points saturés: <?php echo $stats['satures']; ?></div>
-                <div class="card">Points ajoutés: +<?php echo $stats['ajoutes']; ?></div>
-                <div class="card">Points supprimés: -<?php echo $stats['supprimes']; ?></div>
-            </section>
-
-            <section class="table-map">
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Motif</th>
-                                <th>Lieu</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach($points as $point): ?>
-                            <tr>
-                                <td><?= $point['nom'] ?></td>
-                                <td class="<?= strtolower($point['motif']) ?>"><?= $point['motif'] ?></td>
-                                <td><?= $point['lieu'] ?></td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-                <div id="map"></div>
-            </section>
-        </main>
-    </div>
-
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="../Javascript/scriptdash.js"></script>
-</body>
-</html>

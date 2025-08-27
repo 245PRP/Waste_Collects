@@ -1,0 +1,62 @@
+
+
+    .form-contenu {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #070606;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #f4f4f4;;
+      border-radius: 5px;
+      background-color: #f4f4f4;;
+      color: #000;
+      font-size: 14px;
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+      margin-right: 8px;
+    }
+
+    textarea {
+      resize: vertical;
+      height: 80px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .checkbox-group a {
+      color: #4da3ff;
+      text-decoration: none;
+      margin-left: 5px;
+    }
+
+    .checkbox-group a:hover {
+      text-decoration: underline;
+    }
+
+    .multiselect {
+      height: 100px;
+    }

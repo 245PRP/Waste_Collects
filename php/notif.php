@@ -1,10 +1,20 @@
+<?php 
+ session_start();
+if(!$_SESSION['id_user']){
+  header('Location:../Pages/login.html');
+
+
+} 
+$nom=$_SESSION["nom_user"];
+$role=$_SESSION["role"];
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>WASTE Collect</title>
-  <link rel="stylesheet" href="../CSS/pointstyl.css" />
+  <link rel="stylesheet" href="../CSS/dashstyle.css" />
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -24,7 +34,7 @@
       <a class="menu-item" href="../Pages/dashboard.php">
         <i class="fa-solid fa-house" style="color: #cfa13b"></i><span>Accueil</span>
       </a>
-      <a class="menu-item" href="../Pages/point.html">
+      <a class="menu-item" href="../Pages/point.php">
         <i class="fa-solid fa-calendar-check" style="color: #cfa13b"></i>
         <span>Gestion des Points de Collecte</span>
       </a>
@@ -33,8 +43,16 @@
         <span>Tournées de ramassage</span>
       </a>
       <?php if(($role==="administrateur")){?>
-      
-      
+
+
+      <a class="menu-item" href="../php/signale.php">
+        <i class="fa-solid fa-calendar-check" style="color: #cfa13b"></i>
+        <span>Gestion des Signalements</span>
+      </a>
+       <a class="menu-item" href="../php/camion.php">
+        <i class="fa-solid fa-truck" style="color: #cfa13b"></i>
+        <span>Gestion des chauffeurs et camions</span>
+      </a>
       <a class="menu-item" href="#">
         <i class="fa-solid fa-chart-column" style="color: #cfa13b"></i>
         <span>Analyse Statistiques</span>
@@ -43,7 +61,7 @@
         <i class="fa-solid fa-gears" style="color: #cfa13b"></i>
         <span>Configuration</span>
       </a>
-      <a class="menu-item" href="#">
+      <a class="menu-item" href="../php/notif.php">
         <i class="fa-solid fa-bell" style="color: #cfa13b"></i>
         <span>Notifications</span>
       </a>
@@ -70,24 +88,3 @@
         <div class="app-name"><?php echo $nom; ?></div>
       </div>
     </header>
-    <div class="container">
-        <div class="form-box">
-            <h2>FORMULAIRE</h2>
-            <form action="" method="POST">
-                <input type="text" name="nom" placeholder="Entrer le nom du point de collecte" >
-                <input type="float" name="capacité" placeholder="Entrer la capacité du point">
-                <input type="text" name="lieu" placeholder="Entrer le lieu">
-                <label>Etat actuel:</label>
-                <select>
-                    <option value="vide">Vide</option>
-                    <option value="rempli">Rempli</option>
-                    
-                </select>
-                <input type="date" name="date_v" >
-                <button type="submit">Ajouter</button>
-            </form>
-        </div>
-    </div>
-
-    
-    

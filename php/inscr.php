@@ -55,7 +55,7 @@ try{
     if($role==="administrateur"){
         header("Location: ../Pages/dashboard.php");
     }elseif ($role==="citoyen") {
-        header("Location: ../Pages/trouv.html");
+        header("Location: ../Pages/signal.html");
     }elseif ($role==="chauffeur") {
         header("Location: ../Pages/dashboard.php");
     }else{

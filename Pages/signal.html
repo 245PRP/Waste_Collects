@@ -12,21 +12,25 @@
         </div>
         <div class="form-box">
             <h2>FORMULAIRE</h2>
-            <form action="../php/traitement1.php" method="POST">
-                <input type="email" name="email" placeholder="Entrer votre Email" required>
-
+            <form action="../php/signale.php" method="POST">
                 <label>Type de Problème:</label>
-                <select>
+                <select name="motif">
                     <option value="plein">Plein</option>
                     <option value="cassé">Cassé</option>
                     <option value="absent">Absent</option>
                     <option value="renversé">Renversé</option>
                 </select>
+                <label>Entrer la date et l'heure de votre signalement:</label>
+                <input type="datetime-local" name="date_signal"  value="<?php echo date('Y-m-d\TH:i'); ?>" required>
+                
+                <label>Entre votre adresse:</label>
+                <input type="text" name="adresse" required>
 
                 <label>Description:</label>
                 <textarea name="description" placeholder="Entrer votre texte ici" required></textarea>
 
                 <button type="submit">Signaler</button>
+                
             </form>
         </div>
     </div>

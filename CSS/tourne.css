@@ -1,0 +1,15 @@
+
+  #calendar {
+    max-width: 100%;
+    margin: 40px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+  };
+   
+   /* #datepicker {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }

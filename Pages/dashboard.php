@@ -1,4 +1,75 @@
 <?php 
+//connexion à la base de donnée
+try {
+    $cnx= new PDO("mysql:host=localhost;dbname=waste_collect","root","");
+}
+catch(PDOException $e){
+    echo"Erreur de connexion à la base de donnée veuillez réesayer plutard:".$e->getMessage();
+}
+
+//récupérer le nombre de points de collecte saturés
+$sql_satures="SELECT COUNT(*)   AS total FROM point_collecte WHERE Etat = 'rempli'";
+$stmt = $cnx->query($sql_satures);
+    if ($stmt === false) {
+        throw new Exception("Erreur dans la requête : $sql_satures");
+    }
+    $row_satures = $stmt->fetch(PDO::FETCH_ASSOC);
+    $total_satures = $row_satures['total'];
+
+// récupérer les point de collecte Vide
+$sql_vides="SELECT COUNT(*)   AS total FROM point_collecte WHERE Etat = 'vide'";
+$stmt = $cnx->query($sql_vides);
+    if ($stmt === false) {
+        throw new Exception("Erreur dans la requête : $sql_vides");
+    }
+    $row_vides = $stmt->fetch(PDO::FETCH_ASSOC);
+    $total_vides = $row_vides['total'];
+
+
+//récupérer le nombre de signalement
+$sql_signalements = "SELECT COUNT(*) AS total FROM signalement";
+$stmt = $cnx->query($sql_signalements);
+if ($stmt === false) {
+    throw new Exception("Erreur dans la requête : $sql_signalements");
+}
+$row_signalements = $stmt->fetch(PDO::FETCH_ASSOC);
+$total_signalements = $row_signalements['total'];
+
+
+//récupérer le nombre de camion disponible
+$sql_camion = "SELECT COUNT(*) AS total FROM camion";
+$stmt = $cnx->query($sql_camion);
+if ($stmt === false) {
+    throw new Exception("Erreur dans la requête : $sql_camion");
+}
+$row_camion = $stmt->fetch(PDO::FETCH_ASSOC);
+$total_camion = $row_camion['total'];
+
+
+//récupérer le nombre de points de collecte ajoutés
+$sql_vidanges = "SELECT COUNT(*) AS total FROM point_collecte WHERE date_vidange >= CURDATE() AND date_vidange < CURDATE() + INTERVAL 1 DAY";
+
+$stmt = $cnx->query($sql_vidanges);
+$total_vidanges = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+
+
+
+
+
+
+// récupérer le nombre de chauffeurs total
+$sql_chauffeur="SELECT COUNT(*)   AS total FROM utilisateur WHERE role = 'chauffeur'";
+$stmt = $cnx->query($sql_chauffeur);
+    if ($stmt === false) {
+        throw new Exception("Erreur dans la requête : $sql_chauffeur");
+    }
+    $row_chauffeur = $stmt->fetch(PDO::FETCH_ASSOC);
+    $total_chauffeur = $row_chauffeur['total'];
+
+
+
+
+
  session_start();
 if(!$_SESSION['id_user']){
   header('Location:../Pages/login.html');
@@ -34,17 +105,25 @@ $role=$_SESSION["role"];
       <a class="menu-item" href="../Pages/dashboard.php">
         <i class="fa-solid fa-house" style="color: #cfa13b"></i><span>Accueil</span>
       </a>
-      <a class="menu-item" href="../Pages/point.html">
+      <a class="menu-item" href="../Pages/point.php">
         <i class="fa-solid fa-calendar-check" style="color: #cfa13b"></i>
         <span>Gestion des Points de Collecte</span>
       </a>
-      <a class="menu-item" href="#">
+      <a class="menu-item" href="../php/tourner.php">
         <i class="fa-solid fa-truck" style="color: #cfa13b"></i>
         <span>Tournées de ramassage</span>
       </a>
       <?php if(($role==="administrateur")){?>
-      
-      
+
+
+      <a class="menu-item" href="../php/signale.php">
+        <i class="fa-solid fa-calendar-check" style="color: #cfa13b"></i>
+        <span>Gestion des Signalements</span>
+      </a>
+       <a class="menu-item" href="../php/camion.php">
+        <i class="fa-solid fa-truck" style="color: #cfa13b"></i>
+        <span>Gestion des chauffeurs et camions</span>
+      </a>
       <a class="menu-item" href="#">
         <i class="fa-solid fa-chart-column" style="color: #cfa13b"></i>
         <span>Analyse Statistiques</span>
@@ -53,7 +132,7 @@ $role=$_SESSION["role"];
         <i class="fa-solid fa-gears" style="color: #cfa13b"></i>
         <span>Configuration</span>
       </a>
-      <a class="menu-item" href="#">
+      <a class="menu-item" href="../php/notif.php">
         <i class="fa-solid fa-bell" style="color: #cfa13b"></i>
         <span>Notifications</span>
       </a>
@@ -85,15 +164,27 @@ $role=$_SESSION["role"];
     <section class="stats">
       <article class="stat">
         <div class="stat-title">Points de collecte Saturés</div>
-        <div class="stat-value">20</div>
+        <div class="stat-value"><?php echo $total_satures; ?></div>
+      </article>
+      <article class="stat">
+        <div class="stat-title">Points de collecte Vides</div>
+        <div class="stat-value"><?php echo $total_vides; ?></div>
+      </article>
+      <article class="stat">
+        <div class="stat-title">Nombre de Signalements</div>
+        <div class="stat-value"><?php echo $total_signalements; ?></div>
+      </article>
+      <article class="stat">
+        <div class="stat-title">Nombre de Camion</div>
+        <div class="stat-value"><?php echo $total_camion; ?></div>
       </article>
       <article class="stat">
         <div class="stat-title">Points de collecte Ajoutés</div>
-        <div class="stat-value">+15</div>
+        <div class="stat-value"><?php echo $total_vidanges; ?></div>
       </article>
       <article class="stat">
-        <div class="stat-title">Points de collecte Supprimés</div>
-        <div class="stat-value">-5</div>
+        <div class="stat-title">Nombres de Chauffeurs</div>
+        <div class="stat-value"><?php echo $total_chauffeur; ?></div>
       </article>
     </section>
 

@@ -260,7 +260,7 @@ $role=$_SESSION["role"];
           <input type="text" id="permis" name="permis" value="<?= htmlspecialchars($user['permis']) ?>">
         </div>
         <div class="form-actions">
-          <button type="submit" class="btn btn-primary">Enregistrer</button>
+          <button type="submit" class="btn btn-primary">Modifier</button>
           <button type="reset" class="btn btn-secondary">Annuler</button>
         </div>
       </form>

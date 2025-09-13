@@ -19,7 +19,16 @@ $sqlDernier = "SELECT * FROM utilisateur ORDER BY id_user DESC LIMIT 1";
 $stmtDernier = $cnx->query($sqlDernier);
 $dernierUser = $stmtDernier->fetch(PDO::FETCH_ASSOC);
 
-
+if (isset($_GET['supprimer'])) {
+        $nom = $_GET['supprimer'];
+        // Supprimer l'enregistrement d'un utilisateur de la base de données
+        $requte = $cnx->prepare("DELETE FROM utilisateur WHERE nom_user = :nom_user");
+        $requte->bindParam(':nom_user', $nom);
+        $requte->execute();
+        header('Location: ../php/config.php');
+    
+    
+}
 
 
 
@@ -170,7 +179,7 @@ $role=$_SESSION["role"];
                                         data-permis="<?= htmlspecialchars($user['permis']) ?>">
                                         Modifier
                                     </a>
-                                    <a href="#">Supprimer</a>
+                                    <a href="config.php?supprimer=<?= $user['nom_user'] ?>"onclick="return confirm('etes vous sur de vouloir supprimer cet element')">Supprimer</a>
                                  </div>
                          </div>
                         </tr>

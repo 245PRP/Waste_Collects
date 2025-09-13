@@ -132,11 +132,11 @@ $role=$_SESSION["role"];
         <i class="fa-solid fa-truck" style="color: #cfa13b"></i>
         <span>Gestion des chauffeurs et camions</span>
       </a>
-      <a class="menu-item" href="#">
+      <a class="menu-item" href="../php/stat.php">
         <i class="fa-solid fa-chart-column" style="color: #cfa13b"></i>
         <span>Analyse Statistiques</span>
       </a>
-      <a class="menu-item" href="#">
+      <a class="menu-item" href="../php/config.php">
         <i class="fa-solid fa-gears" style="color: #cfa13b"></i>
         <span>Configuration</span>
       </a>

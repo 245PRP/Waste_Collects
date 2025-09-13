@@ -66,6 +66,26 @@ $stmt = $cnx->query($sql_chauffeur);
     $row_chauffeur = $stmt->fetch(PDO::FETCH_ASSOC);
     $total_chauffeur = $row_chauffeur['total'];
 
+/* Retards chauffeurs
+$sqlRetards = "SELECT COUNT(*) AS total FROM chauffeurs WHERE statut='en_retard'";
+$stmt = $conn->prepare($sqlRetards);
+$stmt->execute();
+$nbRetards = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;*/
+
+// Points de collecte saturés (signalés 'Plein')
+$sqlPoints = "SELECT COUNT(*) AS total FROM point_collecte WHERE Etat='rempli'";
+$stmt = $cnx->prepare($sqlPoints);
+$stmt->execute();
+$nbPoints = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+
+// Signalements (tous motifs confondus)
+$sqlSignalements = "SELECT COUNT(*) AS total FROM signalement";
+$stmt = $cnx->prepare($sqlSignalements);
+$stmt->execute();
+$nbSignalements = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+
+// Total général
+$totalNotif = $nbPoints + $nbSignalements;
 
 
 
@@ -102,19 +122,29 @@ $role=$_SESSION["role"];
     </div>
 
     <nav class="menu">
-      <a class="menu-item" href="../Pages/dashboard.php">
-        <i class="fa-solid fa-house" style="color: #cfa13b"></i><span>Accueil</span>
+      
+      <a class="menu-item" href="../php/phpdash.php">
+        <i class="fa-solid fa-house" style="color: #cfa13b"></i><span>DASHBOARD</span>
       </a>
-      <a class="menu-item" href="../Pages/point.php">
-        <i class="fa-solid fa-calendar-check" style="color: #cfa13b"></i>
-        <span>Gestion des Points de Collecte</span>
-      </a>
+      
       <a class="menu-item" href="../php/tourner.php">
         <i class="fa-solid fa-truck" style="color: #cfa13b"></i>
         <span>Tournées de ramassage</span>
       </a>
       <?php if(($role==="administrateur")){?>
 
+        <a class="menu-item" href="../Pages/dashboard.php">
+        <i class="fa-solid fa-house" style="color: #cfa13b"></i><span>Accueil</span>
+      </a>
+      <a class="menu-item" href="../Pages/point.php">
+        <i class="fa-solid fa-calendar-check" style="color: #cfa13b"></i>
+        <span>Gestion des Points de Collecte</span>
+      </a>
+      
+      <a class="menu-item" href="../php/tourner.php">
+        <i class="fa-solid fa-truck" style="color: #cfa13b"></i>
+        <span>Tournées de ramassage</span>
+      </a>
 
       <a class="menu-item" href="../php/signale.php">
         <i class="fa-solid fa-calendar-check" style="color: #cfa13b"></i>
@@ -124,11 +154,11 @@ $role=$_SESSION["role"];
         <i class="fa-solid fa-truck" style="color: #cfa13b"></i>
         <span>Gestion des chauffeurs et camions</span>
       </a>
-      <a class="menu-item" href="#">
+      <a class="menu-item" href="../php/stat.php">
         <i class="fa-solid fa-chart-column" style="color: #cfa13b"></i>
         <span>Analyse Statistiques</span>
       </a>
-      <a class="menu-item" href="#">
+      <a class="menu-item" href="../php/config.php">
         <i class="fa-solid fa-gears" style="color: #cfa13b"></i>
         <span>Configuration</span>
       </a>
@@ -153,11 +183,79 @@ $role=$_SESSION["role"];
         <input type="search" placeholder="Rechercher…" />
       </div>
       <div class="header-right">
-        <div class="bell-wrap">
-          <img src="../Images/notification.png" alt="Notifications" />
-        </div>
+       <div class="dropdown">
+              <button onclick="toggleDropdown()" class="dropbtn">
+                <i class="fa-solid fa-bell"></i>
+                <span class="badg"><?php echo $totalNotif; ?></span>
+              </button>
+              <div id="notifDropdown" class="dropdown-content">
+                    
+                    <strong><a href="../php/notif.php?type=points">
+                      Points Collecte Saturés <span class="notif-count"><?php echo $nbPoints; ?></span>
+                    </a></strong>
+                    <strong><a href="../php/notif.php?type=signalements">
+                      Signalements <span class="notif-count"><?php echo $nbSignalements; ?></span>
+                    </a></strong>
+              </div>
+            </div>
         <div class="app-name"><?php echo $nom; ?></div>
       </div>
+      <style>
+        /* --- header pour éviter que le menu soit coupé --- */
+      .header, .header-right { position: relative; overflow: visible; z-index: 2; }
+
+      /* --- dropdown --- */
+      .dropdown { position: relative; display: inline-block; }
+      .dropbtn { background: none; border: none; cursor: pointer; position: relative; }
+      .dropbtn i { font-size: 22px; color: #cfa13b; }
+
+      /* badge total */
+      .badg {
+        position: absolute; top: -6px; right: -8px;
+        background: red; color: #fff; border-radius: 50%;
+        padding: 2px 6px; font-size: 12px; font-weight: 700;
+      }
+
+      /* menu */
+      .dropdown-content {
+        display: none;
+        position: absolute; right: 0; top: 32px;
+        min-width: 240px; background: #fff; color: #fff;
+        border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,.25);
+        z-index: 9999; padding: 6px 0;
+      }
+      .dropdown-content.show { display: block; }  /* <= IMPORTANT */
+
+      /* items */
+      .dropdown-content a {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 10px 14px; text-decoration: none; color: #000; font-size: 14px;
+      }
+      .dropdown-content a:hover { background: #ccc; }
+
+      /* badge par ligne */
+      .notif-count {
+        background: red; color: #fff; border-radius: 12px;
+        padding: 2px 8px; font-size: 12px; font-weight: 700;
+      }
+
+
+      </style>
+      <script>
+        
+          function toggleDropdown(e) {
+            if (e) e.stopPropagation(); // pour ne pas fermer immédiatement
+            const dd = document.getElementById('notifDropdown');
+            dd.classList.toggle('show');
+          }
+
+          // Fermer si on clique ailleurs
+          document.addEventListener('click', function (ev) {
+            const dd = document.getElementById('notifDropdown');
+            if (!ev.target.closest('.dropdown')) dd.classList.remove('show');
+          });
+
+      </script>
     </header>
 
     <!-- STATS -->

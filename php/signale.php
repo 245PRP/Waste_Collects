@@ -13,17 +13,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $adresse=$_POST['adresse'];
     $date=$_POST['date_signal'];
     $description=$_POST['description'];
+    $id_pt=$_POST['point'];
     $id=$_SESSION["id_user"];
     
   
 
     try {
-        $stmt=$cnx->prepare('INSERT INTO signalement(motif,adresse,date_signal,description,id_user)VALUES (:motif, :adresse, :date_signal, :description, :id_user)');
+        $stmt=$cnx->prepare('INSERT INTO signalement(motif,adresse,date_signal,description,id_user,id_pt)VALUES (:motif, :adresse, :date_signal, :description, :id_user, :id_pt)');
         $stmt->bindParam(':motif', $motif);
         $stmt->bindParam(':adresse', $adresse);
         $stmt->bindParam(':date_signal', $date);
         $stmt->bindParam(':description', $description);
         $stmt->bindParam(':id_user', $id);
+        $stmt->bindParam(':id_pt', $id_pt);
         $stmt->execute();
         //header('Location: ../Pages/signal.html');
     } catch (PDOException $e) {
@@ -73,6 +75,12 @@ $role=$_SESSION["role"];
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="../CSS/signal.css">
+
+  <!-- ===== DataTables et jQuery (HEAD) ===== -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
 </head>
 <body>
     <!-- SIDEBAR -->
@@ -107,11 +115,11 @@ $role=$_SESSION["role"];
         <i class="fa-solid fa-truck" style="color: #cfa13b"></i>
         <span>Gestion des chauffeurs et camions</span>
       </a>
-      <a class="menu-item" href="#">
+      <a class="menu-item" href="../php/stat.php">
         <i class="fa-solid fa-chart-column" style="color: #cfa13b"></i>
         <span>Analyse Statistiques</span>
       </a>
-      <a class="menu-item" href="#">
+      <a class="menu-item" href="../php/config.php">
         <i class="fa-solid fa-gears" style="color: #cfa13b"></i>
         <span>Configuration</span>
       </a>
@@ -143,26 +151,57 @@ $role=$_SESSION["role"];
       </div>
     </header>
 <!-- Tableau -->
-  <table>
-    <thead>
-      <tr>
-        <th>Nom</th>
-        <th>Motif</th>
-        <th>Adresse</th>
-        <th>Date et Heure</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody id="signalTable">
-        <?php foreach ($sign as $signal) : ?>
-      <tr>
-                <td><?= $signal['nom_user'] ?></td>
-                <td><?= $signal['motif'] ?></td>
-                <td><?= $signal['adresse'] ?></td>
-                <td><?= $signal['date_signal'] ?></td>
-                <td><?= $signal['description'] ?></td>
-            
-      </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
+  <h2 class="signal-title">Liste des signalements</h2>
+
+<!-- Tableau transformé en DataTable -->
+<table id="signalTable" class="display">
+  <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Motif</th>
+      <th>Adresse</th>
+      <th>Date et Heure</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php foreach ($sign as $signal) : ?>
+      <?php
+        // formattage date/heure si champ DATETIME
+        $dateHeure = $signal['date_signal'];
+        // Mon NB: pour formater  on fait : $formattedDate = date('d/m/Y H:i', strtotime($dateHeure));
+
+        $formattedDate = date('d/m/Y H:i', strtotime($dateHeure));
+        // badge selon motif 
+        $motif = htmlspecialchars($signal['motif']);
+        $badgeClass = 'badge-autre';
+        if (stripos($motif, 'Plein') !== false) $badgeClass = 'badge-plein';
+        if (stripos($motif, 'Cass') !== false) $badgeClass = 'badge-casse';
+        if (stripos($motif, 'Renvers') !== false) $badgeClass = 'badge-renverse';
+        if (stripos($motif, 'absent') !== false) $badgeClass = 'badge-absent';
+      ?>
+    <tr>
+      <td><?= htmlspecialchars($signal['nom_user']) ?></td>
+      <td><span class="badge <?= $badgeClass ?>"><?= $motif ?></span></td>
+      <td><?= htmlspecialchars($signal['adresse'] ?? '') ?></td>
+      <td><?= $formattedDate ?></td>
+      <td><?= nl2br(htmlspecialchars($signal['description'] ?? '')) ?></td>
+    </tr>
+    <?php endforeach; ?>
+  </tbody>
+</table>
+<script>
+  $(document).ready(function() {
+    $('#signalTable').DataTable({
+      "pageLength": 8,
+      "lengthMenu": [5, 8, 10, 20, 40],
+      "order": [[3, "desc"]], // tri par date 
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json"
+      },
+      "columnDefs": [
+        { "type": "date", "targets": 3 } // aide si DataTables doit trier les dates
+      ]
+    });
+  });
+</script>

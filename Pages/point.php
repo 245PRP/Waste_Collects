@@ -78,16 +78,13 @@ $role=$_SESSION["role"];
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>WASTE Collect</title>
   <link rel="stylesheet" href="../CSS/pointstyl.css" />
+  <link rel="stylesheet" href="../CSS/camion.css" />
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   
     <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f6fa;
-      margin: 20px;
-    }
+  
     h2 {
       color: #333;
     }
@@ -179,7 +176,9 @@ $role=$_SESSION["role"];
     tr:hover {
       background: #f9f9f9;
     }
-    * {box-sizing: border-box}
+    * {
+      box-sizing: border-box
+  }
 
 /* Set a style for all buttons */
 button {
@@ -294,7 +293,7 @@ hr {
       <a class="menu-item" href="../Pages/dashboard.php">
         <i class="fa-solid fa-house" style="color: #cfa13b"></i><span>Accueil</span>
       </a>
-      <a class="menu-item" href="../Pages/point.html">
+      <a class="menu-item" href="../Pages/point.php">
         <i class="fa-solid fa-calendar-check" style="color: #cfa13b"></i>
         <span>Gestion des Points de Collecte</span>
       </a>
@@ -313,11 +312,11 @@ hr {
         <i class="fa-solid fa-truck" style="color: #cfa13b"></i>
         <span>Gestion des chauffeurs et camions</span>
       </a>
-      <a class="menu-item" href="#">
+      <a class="menu-item" href="../php/stat.php">
         <i class="fa-solid fa-chart-column" style="color: #cfa13b"></i>
         <span>Analyse Statistiques</span>
       </a>
-      <a class="menu-item" href="#">
+      <a class="menu-item" href="../php/config.php">
         <i class="fa-solid fa-gears" style="color: #cfa13b"></i>
         <span>Configuration</span>
       </a>
@@ -378,22 +377,39 @@ hr {
   
 <div id="id01" class="modal">
   <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
+  <div class="form-contenu">
   <form class="modal-content" action="#" method="POST">
     <div class="container">
       <div class="container">
-                <div class="form-box">
+                
                     <h2>FORMULAIRE</h2>
-                        <input type="text" name="nom_pt" placeholder="Entrer le nom du point de collecte" >
-                        <input type="float" name="capacite" placeholder="Entrer la capacité du point">
-                        <input type="text" name="lieu" placeholder="Entrer le lieu">
-                        <label>Etat actuel:</label>
+                     <div class="form-group">
+                       <label for="point de collecte">Entrer le nom du point de collecte</label>
+                        <input type="text" name="nom_pt">
+                        </div>
+                        <div class="form-group">
+                          <label for="capacite">Entrer la capacité du point</label>
+                        <input type="float" name="capacite">
+                        </div>
+                        <div class="form-group">
+                          <label for="lieu">Entrer le lieu du point</label>
+                        <input type="text" name="lieu">
+                        </div>
+                        <div class="form-group">
+                        <label for=Etat>Etat actuel:</label>
                         <select name="Etat">
                             <option value="vide">Vide</option>
                             <option value="rempli">Rempli</option>
                             
                         </select>
+                        </div>
+                        <div class="form-group">
+                          <label for=Etat>Entrer une date pour la vidange:</label>
                         <input type="datetime-local" name="date_vidange"  value="<?php echo date('Y-m-d\TH:i'); ?>" >
+                        </div>
+                        <div class="form-group">
                         <button type="submit">Ajouter</button>
+                        </div>
                   </div>
               </div>
               

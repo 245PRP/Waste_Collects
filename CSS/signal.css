@@ -1,8 +1,4 @@
-body {
-      font-family: Arial, sans-serif;
-      background: #f5f6fa;
-      margin: 20px;
-    }
+
     h2 {
       color: #333;
     }
@@ -119,12 +115,12 @@ button:hover {
   background-color: #f44336;
 }
 
-/* Add padding and center-align text to the container */
+/* Add padding and center-align text to the container 
 .container {
   padding: 16px;
   text-align: center;
 }
-
+*/
 /* The Modal (background) */
 .modal {
   display: none; /* Hidden by default */
@@ -174,7 +170,79 @@ hr {
   content: "";
   clear: both;
   display: table;
-}
+
+ /* Style personnalisé pour ton DataTable (ajoute ça dans head ou dans signal.css) */
+ 
+  h2.signal-title { color: #cfa13b; margin: 18px 0; text-align: left; }
+
+  table.dataTable {
+    border-collapse: collapse;
+    width: 100%;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  }
+
+  table.dataTable thead {
+    background: #cfa13b;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 13px;
+  }
+
+  table.dataTable thead th {
+    padding: 12px 10px;
+    border-bottom: none;
+  }
+
+  table.dataTable tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+  }
+
+  table.dataTable tbody tr:hover {
+    background: #fff7e6; /* hover léger */
+  }
+
+  /* Barre de recherche */
+  .dataTables_wrapper .dataTables_filter input {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 6px 8px;
+    margin-left: 8px;
+  }
+
+  /* Pagination */
+  .dataTables_wrapper .dataTables_paginate .paginate_button {
+    border-radius: 6px;
+    padding: 6px 10px;
+    margin: 2px;
+    border: 1px solid transparent;
+    background: #f5f5f5;
+    color: #333 !important;
+  }
+
+  .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: #cfa13b !important;
+    color: #fff !important;
+    border: 1px solid #cfa13b !important;
+  }
+
+  /* Badge motif si tu veux */
+  .badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    display: inline-block;
+  }
+  .badge-plein { background:#f1c40f; color:#000; }
+  .badge-casse { background:#e74c3c; }
+  .badge-renverse { background:#3498db; }
+  .badge-autre { background:#7f8c8d; }}
 
 /* Change styles for cancel button and delete button on extra small screens */
 @media screen and (max-width: 300px) {

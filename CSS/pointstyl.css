@@ -178,7 +178,7 @@ body{
     margin-bottom: 20px;
 }
 
-.form-box input,
+/*.form-box input,
 .form-box textarea {
     width: 100%;
     padding: 10px;
@@ -201,8 +201,8 @@ select{
     margin-top: 10px;
     font-weight: bold;
 }
-
-.form-box button {
+*/
+.form-group button {
     background-color: #d4a017;
     color: black;
     padding: 10px 20px;
@@ -218,7 +218,7 @@ select{
     font-size: 25px;
 }
 
-.form-box button:hover {
+.form-group button:hover {
     background-color: #b38600;
 
 }

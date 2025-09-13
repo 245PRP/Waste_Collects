@@ -1,53 +1,24 @@
 <?php
  session_start();
-$id   = $_SESSION["id_user"];
-//connexion à la base de donnée
+// connexion PDO
 try {
-    $cnx= new PDO("mysql:host=localhost;dbname=waste_collect","root","");
-}
-catch(PDOException $e){
-    echo"Erreur de connexion à la base de donnée veuillez réesayer plutard:".$e->getMessage();
-}
-try {
-    // Tournées traitées
-    $stmt = $cnx->prepare("SELECT COUNT(*) FROM ramassage WHERE  id_user = :id AND statut = 'traitée'");
-    $stmt->execute(['id' => $id]);
-    $traitees = $stmt->fetchColumn();
-
-    // Tournées futures (en attente ET date > aujourd’hui)
-    $stmt = $cnx->prepare("SELECT COUNT(*) FROM ramassage WHERE  id_user = :id AND statut = 'en attente' AND date_tour > CURDATE()");
-    $stmt->execute(['id' => $id]);
-    $futures = $stmt->fetchColumn();
-
-    // Tournées en attente (date <= aujourd’hui)
-    $stmt = $cnx->prepare("SELECT COUNT(*) FROM ramassage WHERE  id_user = :id AND statut = 'en attente' AND date_tour < CURDATE()");
-    $stmt->execute(['id' => $id]);
-    $attente = $stmt->fetchColumn();
-
+    $cnx = new PDO("mysql:host=localhost;dbname=waste_collect", "root", "");
+    $cnx->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Erreur de connexion : " . $e->getMessage());
+    die("Erreur connexion : " . $e->getMessage());
 }
-try {
-    $sql = "
-        SELECT 
-            utilisateur.nom_user,
-            signalement.motif,
-            signalement.date_signal,
-            signalement.adresse,
-            signalement.description
-        FROM signalement
-        INNER JOIN utilisateur 
-            ON signalement.id_user = utilisateur.id_user
-        ORDER BY signalement.date_signal DESC LIMIT 5
-    ";
 
-    $stmt = $cnx->prepare($sql);
-    $stmt->execute();
-    $signalements = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// récupérer infos du chauffeur connecté
+$id = $_SESSION['id_user'];
+$stmt = $cnx->prepare("SELECT * FROM utilisateur WHERE id_user = :id");
+$stmt->bindParam(':id', $id);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-} catch (PDOException $e) {
-    echo "Erreur : " . $e->getMessage();
+if (!$user) {
+    die("Utilisateur introuvable !");
 }
+
 
 
 if(!$_SESSION['id_user']){
@@ -65,7 +36,6 @@ $role=$_SESSION["role"];
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>WASTE Collect</title>
   <link rel="stylesheet" href="../CSS/dashstyle.css" />
-  <link rel="stylesheet" href="../CSS/chauff.css" />
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -206,88 +176,95 @@ $role=$_SESSION["role"];
 
       </script>
     </header>
-    <!-- STATS -->
-    <section class="stats">
-      <article class="stat">
-        <div class="stat-title">Mes tournées Traitéées</div>
-        <div class="stat-value"><?php echo $traitees; ?></div>
-      </article>
-      <article class="stat">
-        <div class="stat-title">Mes tournées futures</div>
-        <div class="stat-value"><?php echo $futures; ?></div>
-      </article>
-      <article class="stat">
-        <div class="stat-title">Mes tournées en attente</div>
-        <div class="stat-value"><?php echo $attente; ?></div>
-      </article>
-    </section>
-     <!-- TABLEAU + MAP -->
-    <section class="grid">
-      <!-- TABLEAU -->
-      <table>
-  <thead>
-    <tr>
-      <th>NOM</th>
-      <th>MOTIF DE SIGNALEMENT</th>
-      <th>DATE ET HEURE</th>
-      <th>ADRESSE</th>
-      <th>DESCRIPTION</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php if (!empty($signalements)): ?>
-      <?php foreach ($signalements as $sig): ?>
-        <?php
-          // Séparer la date et l’heure à partir du champ date_signal
-          $date = date('d/m/Y', strtotime($sig['date_signal']));
-          $heure = date('H:i', strtotime($sig['date_signal']));
-
-          $motif = trim($sig['motif']);
-          $motif = strtolower($sig['motif']);
-          
-          $class = "badge badge-red";
-          if ($motif === "Cassé") {
-            $class = "badge badge-red";
-        }
-          elseif ($motif === "Plein"){ 
-            $class = "badge badge-yellow";
-          } 
-          elseif ($motif === "Renversé") {
-            $class = "badge badge-blue";
-        }
-          elseif ($motif === "Absent") {
-            $class = "badge badge-gray";
-        }
-        ?>
-        <tr>
-          <td><?= htmlspecialchars($sig['nom_user']); ?></td>
-          <td><span class="<?= $class; ?>"><?= $motif; ?></span></td>
-          <td><?= $date; ?></td>
-          <td><?= htmlspecialchars($sig['adresse']); ?></td>
-          <td><?= htmlspecialchars($sig['description']); ?></td>
-        </tr>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <tr><td colspan="5">Aucun signalement trouvé.</td></tr>
-    <?php endif; ?>
-  </tbody>
-</table>
-
-
-      <!-- MAP -->
-      <div class="card map-card">
-        <div class="map-head">
-          <div class="map-title">Rechercher</div>
-          <img src="../Images/rechercher.png" alt="" class="map-gear" />
+<style>
+    .form-container {
+      max-width: 100%;
+      background: #f5f8fa;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .form-container h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #444;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+    .form-actions {
+      margin-top: 20px;
+    }
+    .btn {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    .btn-primary {
+      background: #28a745;
+      color: #fff;
+    }
+    .btn-secondary {
+      background: #ccc;
+      color: #000;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <div class="form-container">
+      <h2>Gestion du Compte</h2>
+      <form action="update_info.php" method="POST">
+        <div class="form-group">
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" name="nom" value="<?= htmlspecialchars($user['nom_user']) ?>" required>
         </div>
-        <div id="map"></div>
-      </div>
-    </section>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
+        </div>
+        <div class="form-group">
+          <label for="telephone">Téléphone</label>
+          <input type="text" id="telephone" name="telephone" value="<?= htmlspecialchars($user['telephone']) ?>" required>
+        </div>
+        <div class="form-group">
+          <label for="role">Rôle</label>
+          <select id="role" name="role" disabled>
+            <option value="Chauffeur" <?= $user['role'] === 'Chauffeur' ? 'selected' : '' ?>>Chauffeur</option>
+            <option value="Administrateur" <?= $user['role'] === 'Administrateur' ? 'selected' : '' ?>>Administrateur</option>
+            <option value="Utilisateur" <?= $user['role'] === 'Utilisateur' ? 'selected' : '' ?>>Utilisateur</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="domicile">Lieu de domicile</label>
+          <input type="text" id="domicile" name="lieu" value="<?= htmlspecialchars($user['lieu']) ?>">
+        </div>
+        <div class="form-group">
+          <label for="permis">Permis</label>
+          <input type="text" id="permis" name="permis" value="<?= htmlspecialchars($user['permis']) ?>">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+          <button type="reset" class="btn btn-secondary">Annuler</button>
+        </div>
+      </form>
+    </div>
   </div>
-
-  <!-- Leaflet -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="../Javascript/dashscript.js"></script>
 </body>
 </html>
-

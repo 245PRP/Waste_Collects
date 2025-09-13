@@ -1,0 +1,290 @@
+body { font-family: Arial, sans-serif; margin:0; }
+.tabs { display:flex; background:#f5f5f5; border-bottom:1px solid #ddd; }
+.tabs button {
+  flex:1;
+  padding:12px;
+  border:none;
+  background:#f5f5f5;
+  cursor:pointer;
+  font-weight:bold;
+}
+.tabs button.active { background:#fff; border-bottom:3px solid #cfa13b; }
+.content-section { display:none; padding:20px; }
+.content-section.active { display:block; }
+
+table { width:100%; border-collapse:collapse; margin-top:20px; background:#fff; }
+th, td { padding:12px; border-bottom:1px solid #ddd; text-align:left; }
+th { background:#f0f0f0; }
+
+.card { background:#fff; padding:20px; border-radius:8px; margin-top:20px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+
+.form-group { margin-bottom:15px; }
+.form-group label { display:block; margin-bottom:5px; }
+.form-group input, .form-group select {
+  width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;
+}
+
+.btn { padding:10px 15px; border:none; border-radius:5px; cursor:pointer; }
+.btn-primary { background:#cfa13b; color:white; }
+.btn-secondary { background:#ddd; }
+
+.actions { text-align:right; }
+.dropdown { position:relative; display:inline-block; }
+.dropdown-content {
+  display:none;
+  position:absolute;
+  right:0;
+  background:#fff;
+  min-width:120px;
+  border:1px solid #ddd;
+  box-shadow:0 2px 6px rgba(0,0,0,0.2);
+  z-index:1;
+}
+.dropdown-content a {
+  display:block;
+  padding:8px 12px;
+  text-decoration:none;
+  color:#333;
+}
+.dropdown-content a:hover { background:#f0f0f0; }
+.dropdown:hover .dropdown-content { display:block; }
+/* Fond du modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  overflow: auto; /* si contenu trop grand, on scrolle */
+  padding-top: 50px; /* petit espace en haut */
+}
+
+/* Contenu du modal */
+.modal-content {
+  background: #fff;
+  margin: auto; /* centre horizontalement */
+  padding: 30px;
+  border-radius: 10px;
+  width: 70%; /* largeur du modal */
+  max-width: 1000px; /* largeur max sur grand écran */
+  min-width: 500px; /* largeur minimum */
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Bouton fermer */
+.close {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: red;
+}
+
+/* Formulaire à l'intérieur du modal */
+.modal-content form {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 colonnes */
+  gap: 20px;
+}
+
+.modal-content .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.modal-content input,
+.modal-content select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.modal-content button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #4CAF50;
+  color: #fff;
+}
+
+.btn-secondary {
+  background: #ccc;
+  color: #333;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.9);}
+  to {opacity: 1; transform: scale(1);}
+}
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /*.card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 20px;
+      max-width: 1100px;
+      
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      text-transform: uppercase;
+      font-size: 13px;
+      color: #555;
+      letter-spacing: 0.05em;
+    }
+
+    tr:hover {
+      background: #f9f9f9;
+    }
+
+    .status {
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    .active { 
+        background: #e6f0ff; 
+        color: #3366cc; 
+    }
+    .inactive { 
+        background: #ffe6e6; 
+        color: #cc0000; 
+    }

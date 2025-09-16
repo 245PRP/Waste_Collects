@@ -18,6 +18,36 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$user) {
     die("Utilisateur introuvable !");
 }
+try {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+       // $id = $_POST["id_user"];
+        $nom = $_POST["nom_user"];
+        $email = $_POST["email"];
+        $tel = $_POST["telephone"];
+        $lieu = $_POST["lieu"];
+        $permis = $_POST["permis"];
+
+        $sql = "UPDATE utilisateur 
+                SET nom_user = :nom, email = :email, telephone = :tel, lieu = :lieu, permis = :permis 
+                WHERE nom_user = :nom";
+
+        $stmt = $cnx->prepare($sql);
+        $stmt->execute([
+            ":nom" => $nom,
+            ":email" => $email,
+            ":tel" => $tel,
+            ":lieu" => $lieu,
+            ":permis" => $permis
+            //":id" => $id
+        ]);
+
+        // redirection pour recharger la liste
+        header("Location: info.php?success=1");
+        exit;
+    }
+} catch (PDOException $e) {
+    echo "Erreur : " . $e->getMessage();
+}
 
 
 
@@ -230,7 +260,7 @@ $role=$_SESSION["role"];
   <div class="main">
     <div class="form-container">
       <h2>Gestion du Compte</h2>
-      <form action="update_info.php" method="POST">
+      <form action="info.php" method="POST">
         <div class="form-group">
           <label for="nom">Nom</label>
           <input type="text" id="nom" name="nom" value="<?= htmlspecialchars($user['nom_user']) ?>" required>

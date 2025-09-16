@@ -122,15 +122,17 @@ $role=$_SESSION["role"];
     </div>
 
     <nav class="menu">
+      <?php if(($role==="chauffeur")){?>
       
       <a class="menu-item" href="../php/phpdash.php">
-        <i class="fa-solid fa-house" style="color: #cfa13b"></i><span>DASHBOARD</span>
+        <i class="fa-solid fa-house" style="color: #cfa13b"></i><span>MES TOURNEES DE RAMASSAGE</span>
       </a>
       
-      <a class="menu-item" href="../php/tourner.php">
+      <a class="menu-item" href="../php/info.php">
         <i class="fa-solid fa-truck" style="color: #cfa13b"></i>
-        <span>Tournées de ramassage</span>
+        <span>MES INFORMATIONS</span>
       </a>
+      <?php } ?>
       <?php if(($role==="administrateur")){?>
 
         <a class="menu-item" href="../Pages/dashboard.php">

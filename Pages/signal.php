@@ -1,4 +1,6 @@
 <?php 
+session_start();
+
 //connexion à la base de donnée
 try {
     $cnx= new PDO("mysql:host=localhost;dbname=waste_collect","root","");
@@ -23,7 +25,30 @@ if($points===false){
 catch(PDOException $e){
     echo"Erreur:".$e->getMessage();
 } 
+// ajouter un point
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+    $motif=$_POST['motif'];
+    $date=$_POST['date_signal'];
+    $description=$_POST['description'];
+    $id_pt=$_POST['point'];
+    $id=$_SESSION["id_user"];
+    
+  
 
+    try {
+        $stmt=$cnx->prepare('INSERT INTO signalement(motif,date_signal,description,id_user,id_pt)VALUES (:motif, :date_signal, :description, :id_user, :id_pt)');
+        $stmt->bindParam(':motif', $motif);
+        $stmt->bindParam(':date_signal', $date);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':id_user', $id);
+        $stmt->bindParam(':id_pt', $id_pt);
+        $stmt->execute();
+        //header('Location: ../Pages/signal.html');
+    } catch (PDOException $e) {
+        echo"Erreur d'insertion des signalements dans la base de donnée".$e->getMessage();
+    }
+
+}
 
 
 
@@ -48,7 +73,7 @@ catch(PDOException $e){
         </div>
         <div class="form-box">
             <h2>FORMULAIRE</h2>
-            <form action="../php/signale.php" method="POST">
+            <form action="#" method="POST">
                 <label>Type de Problème:</label>
                 <select name="motif">
                     <option value="plein">Plein</option>
@@ -65,9 +90,7 @@ catch(PDOException $e){
                 <label>Entrer la date et l'heure de votre signalement:</label>
                 <input type="datetime-local" name="date_signal"  value="<?php echo date('Y-m-d\TH:i'); ?>" required>
                 
-                <label>Entre votre adresse:</label>
-                <input type="text" name="adresse" required>
-
+               
                 <label>Description:</label>
                 <textarea name="description" placeholder="Entrer votre texte ici" required></textarea>
 

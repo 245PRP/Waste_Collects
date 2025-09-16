@@ -83,47 +83,43 @@ $role=$_SESSION["role"];
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   
-    <style>
-  
-    h2 {
-      color: #333;
+    
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f6fa;
+      margin: 0;
+      padding: 0;
     }
+    h2 {
+      text-align: center;
+      color: #333;
+    
+    }
+
+    /* === Boutons === */
     .btn {
       padding: 8px 15px;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
       font-size: 14px;
-    }
-
-    .containr-btn {
-      display: flex;
-      flex-direction: row-reverse;
+      transition: 0.3s;
     }
     .btn-info {
       background: #2f4f4f;
       color: white;
-      width: 10%;
-      display: flex;
-      flex-direction: row-reverse;
     }
     .btn-info:hover {
       background: #3a6161;
     }
-    .btn-success {
-      background: #28a745;
-      color: white;
-    }
-    .btn-success:hover {
-      background: #218838;
-    }
     .btn-edit {
-      background: #3a6161;
+      background:  #2f4f4f; 
       color: white;
       font-size: 12px;
-      padding: 5px 10px;
+      padding: 6px 12px;
       margin-right: 5px;
-      width: 50%;
+      border-radius: 4px;
     }
     .btn-edit:hover {
       background: #0056b3;
@@ -132,33 +128,97 @@ $role=$_SESSION["role"];
       background: #dc3545;
       color: white;
       font-size: 12px;
-      padding: 5px 10px;
-      width: 50%;
+      padding: 6px 12px;
+      border-radius: 4px;
     }
     .btn-delete:hover {
       background: #c82333;
     }
-    #formContainer {
+
+    .containr-btn {
+      display: flex;
+      justify-content: flex-end;
+      margin: 15px;
+    }
+
+    /* === Modal === */
+    .modal {
       display: none;
-      margin-top: 15px;
-      padding: 15px;
+      position: fixed;
+      z-index: 10;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      padding-top: 60px;
+    }
+    .modal-content {
       background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin: auto;
+      padding: 25px;
+      border-radius: 10px;
+      width: 600px;
+      max-width: 95%;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
-    #formContainer input {
-      padding: 8px;
-      margin: 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      width: 180px;
+    .close {
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
+    .close:hover {
+      color: #dc3545;
+    }
+
+    /* === Formulaire === */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px 30px;
       margin-top: 20px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #444;
+    }
+    input, select {
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    input:focus, select:focus {
+      border-color: #cfa13b;
+      box-shadow: 0 0 4px rgba(207,161,59,0.6);
+    }
+    .form-actions {
+      grid-column: 1 / span 2;
+      text-align: center;
+    }
+    .form-actions button {
+      background: #cfa13b;
+      color: white;
+      padding: 10px 20px;
+      font-size: 15px;
+      border: none;
+      border-radius: 6px;
+    }
+    .form-actions button:hover {
+      background: #a97f2e;
+    }
+
+    /* === Tableau === */
+    table {
+      width: 95%;
+      border-collapse: collapse;
       background: #fff;
-      border-radius: 8px;
+      border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
@@ -168,7 +228,7 @@ $role=$_SESSION["role"];
       text-align: left;
     }
     th {
-      background: #f0f0f0;
+      background: #f4f4f4;
       text-transform: uppercase;
       font-size: 13px;
       color: #666;
@@ -176,105 +236,25 @@ $role=$_SESSION["role"];
     tr:hover {
       background: #f9f9f9;
     }
-    * {
-      box-sizing: border-box
-  }
+    /* Couleurs pour l'état */
+    .etat-vide {
+      color: green;
+      font-weight: bold;
+    }
+    .etat-rempli {
+      color: red;
+      font-weight: bold;
+    }
 
-/* Set a style for all buttons */
-button {
-  background-color: #04AA6D;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
-  opacity: 0.9;
-}
-
-button:hover {
-  opacity:1;
-}
-
-/* Float cancel and delete buttons and add an equal width */
-.cancelbtn, .deletebtn {
-  float: left;
-  width: 50%;
-}
-
-/* Add a color to the cancel button */
-.cancelbtn {
-  background-color: #ccc;
-  color: black;
-}
-
-/* Add a color to the delete button */
-.deletebtn {
-  background-color: #f44336;
-}
-
-/* Add padding and center-align text to the container */
-.container {
-  padding: 16px;
-  text-align: center;
-}
-
-/* The Modal (background) */
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: #474e5d;
-  padding-top: 50px;
-}
-
-/* Modal Content/Box */
-.modal-content {
-  background-color: #fefefe;
-  margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
-  border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
-}
-
-/* Style the horizontal ruler */
-hr {
-  border: 1px solid #f1f1f1;
-  margin-bottom: 25px;
-}
-
-/* The Modal Close Button (x) */
-.close {
-  position: absolute;
-  right: 35px;
-  top: 15px;
-  font-size: 40px;
-  font-weight: bold;
-  color: #f1f1f1;
-}
-
-.close:hover,
-.close:focus {
-  color: #f44336;
-  cursor: pointer;
-}
-
-/* Clear floats */
-.clearfix::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-/* Change styles for cancel button and delete button on extra small screens */
-@media screen and (max-width: 300px) {
-  .cancelbtn, .deletebtn {
-    width: 100%;
-  }
-}
+    /* Responsive */
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-actions {
+        grid-column: 1;
+      }
+    }
   </style>
 
 </head>
@@ -373,49 +353,41 @@ hr {
   <div class="containr-btn">
     <button id="Btn" class="btn btn-info ajt" onclick="document.getElementById('id01').style.display='block'">+ Ajouter un point</button>
   </div>
-
-  
-<div id="id01" class="modal">
-  <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
-  <div class="form-contenu">
-  <form class="modal-content" action="#" method="POST">
-    <div class="container">
-      <div class="container">
-                
-                    <h2>FORMULAIRE</h2>
-                     <div class="form-group">
-                       <label for="point de collecte">Entrer le nom du point de collecte</label>
-                        <input type="text" name="nom_pt">
-                        </div>
-                        <div class="form-group">
-                          <label for="capacite">Entrer la capacité du point</label>
-                        <input type="float" name="capacite">
-                        </div>
-                        <div class="form-group">
-                          <label for="lieu">Entrer le lieu du point</label>
-                        <input type="text" name="lieu">
-                        </div>
-                        <div class="form-group">
-                        <label for=Etat>Etat actuel:</label>
-                        <select name="Etat">
-                            <option value="vide">Vide</option>
-                            <option value="rempli">Rempli</option>
-                            
-                        </select>
-                        </div>
-                        <div class="form-group">
-                          <label for=Etat>Entrer une date pour la vidange:</label>
-                        <input type="datetime-local" name="date_vidange"  value="<?php echo date('Y-m-d\TH:i'); ?>" >
-                        </div>
-                        <div class="form-group">
-                        <button type="submit">Ajouter</button>
-                        </div>
-                  </div>
-              </div>
-              
+  <!-- Modal -->
+  <div id="id01" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="document.getElementById('id01').style.display='none'">&times;</span>
+      <h3>Ajouter un point</h3>
+      <form action="#" method="POST" class="form-grid">
+        <div class="form-group">
+          <label>Nom du point</label>
+          <input type="text" name="nom_pt" required>
+        </div>
+        <div class="form-group">
+          <label>Capacité</label>
+          <input type="number" name="capacite" required>
+        </div>
+        <div class="form-group">
+          <label>Lieu</label>
+          <input type="text" name="lieu" required>
+        </div>
+        <div class="form-group">
+          <label>État actuel</label>
+          <select name="Etat">
+            <option value="vide">Vide</option>
+            <option value="rempli">Rempli</option>
+          </select>
+        </div>
+        <div class="form-group" style="grid-column: 1 / span 2;">
+          <label>Date de vidange</label>
+          <input type="datetime-local" name="date_vidange" value="<?php echo date('Y-m-d\TH:i'); ?>">
+        </div>
+        <div class="form-actions">
+          <button type="submit">Ajouter</button>
+        </div>
+      </form>
     </div>
-  </form>
-</div>
+  </div>
 
   <!-- Tableau -->
   <table>

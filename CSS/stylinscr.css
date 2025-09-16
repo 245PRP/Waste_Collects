@@ -75,5 +75,12 @@ select {
     border-radius: 20px;
     width: 108%;
 }
+.forgot {
+    display: block;
+    margin: 5px 0;
+    font-size: 12px;
+    text-decoration: none;
+    color: goldenrod;
+}
 
 

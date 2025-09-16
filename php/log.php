@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if ($role === "administrateur") {
                 header("Location: ../Pages/dashboard.php");
             } elseif ($role === "citoyen") {
-                header("Location: ../Pages/signal.html");
+                header("Location: ../Pages/signal.php");
             } elseif ($role === "chauffeur") {
                 header("Location: ../Pages/dashboard.php");
             } else {

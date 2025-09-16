@@ -18,7 +18,6 @@ catch(PDOException $e){
     echo"Erreur de connexion :".$e->getMessage();
 }
 
-// Récupération des stats : nombre de signalements par point
 // Récupération des stats par mois
 $sql = "SELECT YEAR(date_signal) AS annee, MONTH(date_signal) AS mois, COUNT(id_sign) AS total_signalements
         FROM signalement
@@ -60,7 +59,6 @@ foreach ($moisSignalements as $m => $total) {
     $values[] = $total;
 }
 
-
 // Récupérer l’année sélectionnée via GET (par défaut année courante)
 $anneeSelect = isset($_GET['annee']) ? (int)$_GET['annee'] : date("Y");
 
@@ -69,34 +67,44 @@ $sqlYears = "SELECT DISTINCT YEAR(date_signal) as annee FROM signalement ORDER B
 $yearsStmt = $cnx->query($sqlYears);
 $years = $yearsStmt->fetchAll(PDO::FETCH_COLUMN);
 
+// --- Points de collecte les plus fréquentés (TOP 1 par mois) ---
+$sqlTopPoints = "
+    SELECT mois, nom_pt, total FROM (
+        SELECT 
+            MONTH(signalement.date_signal) AS mois, 
+            point_collecte.nom_pt, 
+            COUNT(signalement.id_sign) AS total,
+            ROW_NUMBER() OVER (PARTITION BY MONTH(signalement.date_signal) ORDER BY COUNT(signalement.id_sign) DESC) 
+        FROM signalement
+        JOIN point_collecte ON signalement.id_pt = point_collecte.id_pt
+        WHERE YEAR(signalement.date_signal) = :annee
+        GROUP BY mois, point_collecte.nom_pt
+    ) 
+   
+    ORDER BY t.mois;
+";
 
-// --- Courbe points de collecte les plus fréquentés ---
-$sqlCourbe = "SELECT point_collecte.nom_pt, MONTH(signalement.date_signal) AS mois, COUNT(signalement.id_sign) AS total
-              FROM signalement
-              JOIN point_collecte ON signalement.id_pt = point_collecte.id_pt
-              WHERE YEAR(signalement.date_signal) = :annee
-              GROUP BY point_collecte.nom_pt, mois
-              ORDER BY point_collecte.nom_pt, mois";
-
-$stmtCourbe = $cnx->prepare($sqlCourbe);
-$stmtCourbe->execute(['annee' => $anneeSelect]);
-$resCourbe = $stmtCourbe->fetchAll(PDO::FETCH_ASSOC);
+$stmtTop = $cnx->prepare($sqlTopPoints);
+$stmtTop->execute(['annee' => $anneeSelect]);
+$resTop = $stmtTop->fetchAll(PDO::FETCH_ASSOC);
 
 // Organiser les données pour Chart.js
-$dataPoints = [];
-foreach ($resCourbe as $row) {
-    $nomPt = $row['nom_pt'];
-    if (!isset($dataPoints[$nomPt])) {
-        $dataPoints[$nomPt] = array_fill(1, 12, 0);
-    }
-    $dataPoints[$nomPt][$row['mois']] = $row['total'];
+$labelsTop = [];
+$valuesTop = [];
+$nomsPtTop = [];
+
+for ($m = 1; $m <= 12; $m++) {
+    $labelsTop[$m] = $moisNoms[$m];  
+    $valuesTop[$m] = 0;              
+    $nomsPtTop[$m] = "";             
 }
 
-/* Debug pour voir les données
-echo "<pre>";
-print_r($labels);
-print_r($values);
-echo "</pre>";*/
+foreach ($resTop as $row) {
+    $labelsTop[$row['mois']] = $moisNoms[$row['mois']];
+    $valuesTop[$row['mois']] = $row['total'];
+    $nomsPtTop[$row['mois']] = $row['nom_pt'];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -171,7 +179,7 @@ echo "</pre>";*/
     </header>
 <div class="charts-intro">
   <p><strong>Introduction :</strong> Le premier graphique ci-dessous montre l’évolution des signalements par mois sur l’année en cours.  
-  Le second graphique compare les points de collecte les plus fréquemment signalés selon l’année choisie.</p>
+  Le second graphique affiche le point de collecte le plus fréquemment signalé pour chaque mois de l’année choisie.</p>
 </div>
     <div class="charts-container">
     <!-- CONTENU -->
@@ -190,8 +198,8 @@ echo "</pre>";*/
               label: 'Nombre de signalements',
               data: <?php echo json_encode($values); ?>,
               backgroundColor: '#cfa13b',
-              barPercentage: 0.5,
-              categoryPercentage: 0.5
+              borderColor: '#cfa13b',
+              fill: false
           }]
       },
       options: {
@@ -252,19 +260,19 @@ echo "</pre>";*/
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  flex-wrap: wrap; /* important pour mobile */
+  flex-wrap: wrap;
   width: 90%;
   margin: 0 auto;
 }
 
 .charts-container .card {
-  flex: 1 1 48%; /* prend 48% de largeur, s’adapte */
+  flex: 1 1 48%;
   max-width: 48%;
 }
 
 @media (max-width: 900px) {
   .charts-container .card {
-    flex: 1 1 100%; /* sur petits écrans, passe en colonne */
+    flex: 1 1 100%;
     max-width: 100%;
   }
 }
@@ -274,12 +282,10 @@ echo "</pre>";*/
   margin-bottom: 10px;
   color: #555;
 }
-
-
 </style>
 
 <div class="card">
-  <h3>Points de collecte les plus fréquentés</h3>
+  <h3>Point de collecte le plus fréquenté par mois</h3>
   <form method="get" onchange="this.submit()">
     <label for="annee">Année :</label>
     <select name="annee" id="annee">
@@ -290,38 +296,35 @@ echo "</pre>";*/
       <?php endforeach; ?>
     </select>
   </form>
-  <canvas id="courbePointsChart"></canvas>
+  <canvas id="topPointsChart"></canvas>
 </div>
 
 <script>
-  
-  // Courbes points de collecte
-  const ctxPoints = document.getElementById('courbePointsChart').getContext('2d');
-  const barcolor="#cfa13b";
-  new Chart(ctxPoints, {
+  const ctxTop = document.getElementById('topPointsChart').getContext('2d');
+  new Chart(ctxTop, {
     type: 'bar',
     data: {
-      labels: <?= json_encode(array_values($moisNoms)) ?>,
-      datasets: [
-        <?php foreach ($dataPoints as $nomPt => $moisData): ?>
-        {
-          label: <?= json_encode($nomPt) ?>,
-          data: <?= json_encode(array_values($moisData)) ?>,
-          backgroundColor: barcolor,
-          borderWidth: 2,
-          fill: false
-
-        },
-        <?php endforeach; ?>
-      ]
+      labels: <?= json_encode(array_values($labelsTop)) ?>,
+      datasets: [{
+        label: 'Signalements (point le plus fréquenté)',
+        data: <?= json_encode(array_values($valuesTop)) ?>,
+        backgroundColor: '#cfa13b' // ✅ une seule couleur
+      }]
     },
     options: {
       responsive: true,
       plugins: {
-              legend: {
-                  display: false
-              },
-          },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              let mois = context.label;
+              let valeur = context.formattedValue;
+              let noms = <?= json_encode(array_values($nomsPtTop)) ?>;
+              return mois + ' : ' + valeur + ' signalements (' + noms[context.dataIndex] + ')';
+            }
+          }
+        }
+      },
       scales: {
         y: {
           beginAtZero: true,
@@ -335,5 +338,4 @@ echo "</pre>";*/
 </script>
 </div>
 </body>
-
 </html>

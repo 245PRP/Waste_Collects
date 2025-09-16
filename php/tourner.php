@@ -255,33 +255,34 @@ $role=$_SESSION["role"];
       
             
                 <h2>Planifier une tournée</h2>
-<form class="modal-content" action="#" method="POST">
-    <div class="form-group">
-        <label for="chauffeur">Chauffeur Assignés :</label>
-            <select id="limit" name="chauffeur">
-            <?php foreach ($chauf as $chauff) : ?>
-            <option value=<?= $chauff['id_user'] ?>><?= $chauff['nom_user'] ?></option>
-            <?php endforeach; ?>   
-            </select>
-     </div>
+<form class="modal-content form-grid" action="#" method="POST">
+  <h2>Planifier une tournée</h2>
 
-     <div class="form-group">
-        <label for="point">Point de Collecte choisi :</label>
-        <select id="limit" name="point">
-            <?php foreach ($points as $point) : ?>
-            <option value=<?= $point['id_pt'] ?>><?= $point['nom_pt'] ?></option>
-            <?php endforeach; ?>   
-            </select>
-        
-     </div>
+  <div class="form-group">
+    <label for="chauffeur">Chauffeur Assigné :</label>
+    <select id="chauffeur" name="chauffeur">
+      <?php foreach ($chauf as $chauff) : ?>
+        <option value="<?= $chauff['id_user'] ?>"><?= $chauff['nom_user'] ?></option>
+      <?php endforeach; ?>
+    </select>
+  </div>
 
-     <div class="form-group">
-      <label for="date">Date de tournée à planifier:</label>
-      <input type="date" name="date_tour" id="date" required>
-     </div>
+  <div class="form-group">
+    <label for="point">Point de Collecte choisi :</label>
+    <select id="point" name="point">
+      <?php foreach ($points as $point) : ?>
+        <option value="<?= $point['id_pt'] ?>"><?= $point['nom_pt'] ?></option>
+      <?php endforeach; ?>
+    </select>
+  </div>
 
-      <button type="submit" class="btn">Enregistrer</button>
-    </form>
+  <div class="form-group">
+    <label for="date">Date de tournée :</label>
+    <input type="date" name="date_tour" id="date" required>
+  </div>
+
+  <button type="submit" class="btn">Enregistrer</button>
+</form>
         
         </div>
   </div>

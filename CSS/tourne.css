@@ -1,10 +1,18 @@
 
  #calendar {
-    max-width: 100%;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-  };
+  width: 100%;
+  max-width: 100%;
+  height: calc(100vh - 200px); /* prend presque tout l’écran, sauf l’entête */
+  margin: 20px auto;
+  }
+  .fc {  /* FullCalendar */
+  font-size: 14px;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
 
   h2 {
       color: #333;
@@ -32,11 +40,11 @@
       background: #3a6161;
     }
     .btn-success {
-      background: #28a745;
+      background: #2f4f4f;
       color: white;
     }
     .btn-success:hover {
-      background: #218838;
+      background: #2f4f4f;
     }
     
    label {
@@ -83,17 +91,59 @@
       font-size: 13px;
       color: #666;
     }
-    .form-group {
-      margin-bottom: 15px;
-    }
+    
     tr:hover {
       background: #f9f9f9;
     }
     * {box-sizing: border-box}
 
+    .modal .form-contenu {
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 12px;
+  max-width: 700px;
+  margin: auto;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 30px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-grid h2 {
+  grid-column: 1 / span 2;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+.form-grid button {
+  grid-column: 1 / span 2;
+  justify-self: center;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: #2f4f4f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.form-grid button:hover {
+  background: #a77f2a;
+}
+
 /* Set a style for all buttons */
 button {
-  background-color: #04AA6D;
+  background-color: #2f4f4f;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -109,28 +159,28 @@ button:hover {
   padding: 16px;
   text-align: center;
 }
-
-/* The Modal (background) */
+/*
+/* The Modal (background) 
 .modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  display: none; /* Hidden by default 
+  position: fixed; /* Stay in place 
+  z-index: 1; /* Sit on top 
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
+  width: 100%; /* Full width 
+  height: 100%; /* Full height 
+  overflow: auto; /* Enable scroll if needed 
   background-color: #474e5d;
   padding-top: 50px;
 }
-
-/* Modal Content/Box */
+*/
+/* Modal Content/Box 
 .modal-content {
   background-color: #fefefe;
-  margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+  margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered 
   border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
-}
+  width: 80%; /* Could be more or less, depending on screen size 
+}*/
 
 /* Style the horizontal ruler */
 hr {

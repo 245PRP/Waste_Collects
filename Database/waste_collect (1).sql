@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mar. 16 sep. 2025 à 16:24
+-- Généré le : ven. 19 sep. 2025 à 22:18
 -- Version du serveur : 5.7.36
 -- Version de PHP : 7.4.26
 
@@ -59,17 +59,22 @@ CREATE TABLE IF NOT EXISTS `point_collecte` (
   `capacite` float NOT NULL,
   `Etat` varchar(20) NOT NULL,
   `date_vidange` datetime(2) NOT NULL,
+  `latitude` float NOT NULL,
+  `longitude` float NOT NULL,
   PRIMARY KEY (`id_pt`)
-) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `point_collecte`
 --
 
-INSERT INTO `point_collecte` (`id_pt`, `nom_pt`, `lieu`, `capacite`, `Etat`, `date_vidange`) VALUES
-(16, 'point newbell', 'newbell', 452, 'vide', '2025-09-15 11:53:00.00'),
-(15, 'point akwa', 'bafoussam', 450, 'vide', '2025-09-04 10:45:00.00'),
-(14, 'point yassa', 'douala', 228, 'rempli', '2025-09-04 09:25:00.00');
+INSERT INTO `point_collecte` (`id_pt`, `nom_pt`, `lieu`, `capacite`, `Etat`, `date_vidange`, `latitude`, `longitude`) VALUES
+(16, 'point newbell', 'newbell', 452, 'vide', '2025-09-15 11:53:00.00', 0, 0),
+(15, 'point akwa', 'bafoussam', 450, 'vide', '2025-09-04 10:45:00.00', 0, 0),
+(14, 'point yassa', 'douala', 228, 'rempli', '2025-09-04 09:25:00.00', 0, 0),
+(34, 'point yassa', 'Douala', 255, 'vide', '2025-09-19 15:41:00.00', 4.05055, 9.73927),
+(35, 'POINT CITE SIC', 'Douala', 250, 'vide', '2025-09-19 16:12:00.00', 4.0598, 9.7233),
+(36, 'POINT VALLEE', 'Douala', 540, 'vide', '2025-09-19 17:31:00.00', 4.04659, 9.73955);
 
 -- --------------------------------------------------------
 
@@ -143,16 +148,12 @@ INSERT INTO `signalement` (`id_sign`, `motif`, `description`, `date_signal`, `id
 (13, 'cassÃ©', 'aucun', '2025-08-25 13:43:00', NULL, NULL, 0),
 (14, 'cassÃ©', 'aucun', '2025-08-25 13:43:00', NULL, NULL, 0),
 (15, 'cassÃ©', 'aucun', '2025-01-25 13:43:00', NULL, 15, 0),
-(16, 'cassÃ©', 'aucun', '2025-02-25 13:43:00', 12, 14, 1),
 (17, 'cassÃ©', 'qsdfghjk', '2025-02-16 14:05:00', 12, 14, 0),
-(18, 'cassÃ©', 'aucune description', '2000-02-14 12:00:00', 12, 14, 1),
-(19, 'plein', 'point franchement rempli', '2025-01-03 18:03:00', 12, 15, 1),
 (20, 'cassÃ©', 'point endomagÃ©', '2025-01-04 19:04:00', 12, 12, 0),
 (21, 'cassÃ©', 'aucun', '2025-01-04 10:36:00', 12, 12, 0),
 (22, 'cassÃ©', 'aucun', '2025-01-04 10:43:00', 12, 15, 0),
 (23, 'absent', 'zertyuiop', '2025-02-04 11:19:00', 12, 14, 0),
 (24, 'cassÃ©', 'sdfghjkl', '2025-01-04 11:49:00', 12, 14, 0),
-(47, 'plein', 'none', '2025-09-16 11:43:00', 12, 16, 1),
 (26, 'plein', 'aucun', '2025-09-08 15:38:00', 12, 12, 0),
 (28, 'plein', 'point de collecte très plein', '2025-01-22 16:52:42', NULL, NULL, 0),
 (29, 'plein', 'point de collecte très plein', '2025-01-22 16:52:42', NULL, NULL, 0),
@@ -160,18 +161,15 @@ INSERT INTO `signalement` (`id_sign`, `motif`, `description`, `date_signal`, `id
 (33, 'plein', 'aucun', '2025-05-29 15:38:00', 12, 11, 0),
 (34, 'plein', 'aucun', '2025-04-22 19:42:00', 12, 11, 0),
 (35, 'plein', 'aucun', '2025-04-24 19:42:00', 12, 12, 0),
-(45, 'cassÃ©', 'non', '2025-09-16 11:42:00', 12, 15, 1),
 (44, 'absent', 'none', '2025-09-16 11:40:00', 12, 15, 0),
 (38, 'plein', 'none', '2025-09-12 03:31:00', NULL, 11, 0),
 (39, 'cassÃ©', 'qsdfghj;', '2025-09-15 11:11:00', NULL, 11, 0),
 (40, 'plein', 'tyest', '2025-09-15 11:22:00', NULL, 15, 0),
 (41, 'plein', 'tyest', '2025-09-15 11:22:00', NULL, 15, 0),
 (46, 'renversÃ©', 'pas de description', '2025-09-16 11:42:00', 12, 14, 0),
-(43, 'absent', 'none', '2025-09-16 11:38:00', 12, 16, 1),
 (48, 'plein', 'none', '2025-09-16 11:43:00', 12, 16, 0),
-(49, 'cassÃ©', 'none', '2025-09-16 14:01:00', 12, 15, 0),
-(50, 'plein', 'ouinoi', '2025-09-16 14:30:00', 12, 14, 0),
-(51, 'renversÃ©', 'aucun', '2025-09-16 14:30:00', 12, 15, 0);
+(49, 'cassÃ©', 'none', '2025-09-16 14:01:00', 12, 15, 1),
+(51, 'renversÃ©', 'aucun', '2025-09-16 14:30:00', 12, 15, 1);
 
 -- --------------------------------------------------------
 

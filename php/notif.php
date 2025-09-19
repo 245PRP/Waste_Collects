@@ -237,7 +237,6 @@ $signalements = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div class="notif-item" data-id="<?= $s['id_sign'] ?>" 
            data-motif="<?= htmlspecialchars($s['motif']) ?>" 
            data-desc="<?= htmlspecialchars($s['description']) ?>" 
-           data-adr="<?= htmlspecialchars($s['adresse']) ?>" 
            data-date="<?= date("d/m/Y H:i", strtotime($s['date_signal'])) ?>" 
            data-user="<?= htmlspecialchars($s['nom_user']).' ('.$s['role'].')' ?>" 
            data-pt="<?= htmlspecialchars($s['nom_pt']) ?>">
@@ -285,7 +284,6 @@ document.querySelectorAll(".notif-item").forEach(el=>{
     document.getElementById("mPt").textContent="Point: "+this.dataset.pt;
     document.getElementById("mMotif").textContent=this.dataset.motif;
     document.getElementById("mDesc").textContent=this.dataset.desc;
-    document.getElementById("mAdr").textContent=this.dataset.adr;
     document.getElementById("mDate").textContent=this.dataset.date;
     document.getElementById("notifModal").style.display="flex";
     // marquer comme lu via Ajax

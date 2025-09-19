@@ -13,15 +13,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $lieu=$_POST['lieu'];
     $capacite=$_POST['capacite'];
     $Etat=$_POST['Etat'];
-     $date=$_POST['date_vidange'];
+    $date=$_POST['date_vidange'];
+    $lat = (float) $_POST['latitude'];
+    $lon = (float) $_POST['longitude'];
 
     try {
-        $stmt=$cnx->prepare('INSERT INTO point_collecte(nom_pt,lieu,capacite,Etat,date_vidange)VALUES (:nom_pt, :lieu, :capacite, :Etat, :date_vidange)');
+        $stmt=$cnx->prepare('INSERT INTO point_collecte(nom_pt,lieu,capacite,Etat,date_vidange,latitude, longitude)VALUES (:nom_pt, :lieu, :capacite, :Etat, :date_vidange , :latitude, :longitude)');
         $stmt->bindParam(':nom_pt', $nom);
         $stmt->bindParam(':lieu', $lieu);
         $stmt->bindParam(':capacite', $capacite);
         $stmt->bindParam(':Etat', $Etat);
         $stmt->bindParam(':date_vidange', $date);
+        $stmt->bindParam(':latitude', $lat);
+        $stmt->bindParam(':longitude', $lon);
         $stmt->execute();
        // header('Location: ../Pages/point.php');
     } catch (PDOException $e) {
@@ -48,6 +52,11 @@ catch(PDOException $e){
     echo"Erreur:".$e->getMessage();
 } 
 
+// Récupérer tous les points
+$stmt = $cnx->prepare("SELECT * FROM point_collecte");
+$stmt->execute();
+$poits = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 if (isset($_GET['supprimerid_pt'])) {
         $id = $_GET['supprimerid_pt'];
@@ -70,6 +79,7 @@ if(!$_SESSION['id_user']){
 $nom=$_SESSION["nom_user"];
 $role=$_SESSION["role"];
 
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -82,7 +92,13 @@ $role=$_SESSION["role"];
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-  
+  <!-- CSS Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- CSS + JS du plugin Routing Machine -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+  <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
     
   <style>
     body {
@@ -122,7 +138,7 @@ $role=$_SESSION["role"];
       border-radius: 4px;
     }
     .btn-edit:hover {
-      background: #0056b3;
+      background: #2f4f4f;
     }
     .btn-delete {
       background: #dc3545;
@@ -143,13 +159,14 @@ $role=$_SESSION["role"];
 
     /* === Modal === */
     .modal {
-      display: none;
+      
       position: fixed;
       z-index: 10;
       left: 0; top: 0;
       width: 100%; height: 100%;
       background: rgba(0,0,0,0.5);
       padding-top: 60px;
+      
     }
     .modal-content {
       background: #fff;
@@ -202,7 +219,7 @@ $role=$_SESSION["role"];
       text-align: center;
     }
     .form-actions button {
-      background: #cfa13b;
+      background: #2f4f4f;
       color: white;
       padding: 10px 20px;
       font-size: 15px;
@@ -210,7 +227,7 @@ $role=$_SESSION["role"];
       border-radius: 6px;
     }
     .form-actions button:hover {
-      background: #a97f2e;
+      background: #2f4f4f;
     }
 
     /* === Tableau === */
@@ -254,6 +271,28 @@ $role=$_SESSION["role"];
       .form-actions {
         grid-column: 1;
       }
+    }
+  </style>
+  <!--carte css-->
+  <style>
+    #map { 
+      height: 500px; 
+    }
+    .popup-content { 
+      text-align: center; 
+    }
+    .btn-route {
+        display: inline-block;
+        margin-top: 5px;
+        padding: 6px 12px;
+        background: #2f4f4f;;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    .btn-route:hover {
+        background: #758687;
     }
   </style>
 
@@ -327,68 +366,92 @@ $role=$_SESSION["role"];
         <div class="app-name"><?php echo $nom; ?></div>
       </div>
     </header>
-    <!---->
-    <div id="ibtn" class="modal">
-            <div class="container">
-                <div class="form-box">
-                    <h2>FORMULAIRE</h2>
-                    <form action="#" method="POST">
-                        <input type="text" name="nom_pt" placeholder="Entrer le nom du point de collecte" >
-                        <input type="float" name="capacite" placeholder="Entrer la capacité du point">
-                        <input type="text" name="lieu" placeholder="Entrer le lieu">
-                        <label>Etat actuel:</label>
-                        <select name="Etat">
-                            <option value="vide">Vide</option>
-                            <option value="rempli">Rempli</option>
-                            
-                        </select>
-                        <input type="datetime-local" name="date_vidange"  >
-                        <button type="submit">Ajouter</button>
-                    </form>
-                  </div>
-              </div>
-     </div>
     <body>
+      <div>
   <h2>POINTS DE COLLECTE</h2>
   <div class="containr-btn">
     <button id="Btn" class="btn btn-info ajt" onclick="document.getElementById('id01').style.display='block'">+ Ajouter un point</button>
-  </div>
+      </div>
   <!-- Modal -->
-  <div id="id01" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="document.getElementById('id01').style.display='none'">&times;</span>
-      <h3>Ajouter un point</h3>
-      <form action="#" method="POST" class="form-grid">
-        <div class="form-group">
-          <label>Nom du point</label>
-          <input type="text" name="nom_pt" required>
-        </div>
-        <div class="form-group">
-          <label>Capacité</label>
-          <input type="number" name="capacite" required>
-        </div>
-        <div class="form-group">
-          <label>Lieu</label>
-          <input type="text" name="lieu" required>
-        </div>
-        <div class="form-group">
-          <label>État actuel</label>
-          <select name="Etat">
-            <option value="vide">Vide</option>
-            <option value="rempli">Rempli</option>
-          </select>
-        </div>
-        <div class="form-group" style="grid-column: 1 / span 2;">
-          <label>Date de vidange</label>
-          <input type="datetime-local" name="date_vidange" value="<?php echo date('Y-m-d\TH:i'); ?>">
-        </div>
-        <div class="form-actions">
-          <button type="submit">Ajouter</button>
-        </div>
-      </form>
-    </div>
-  </div>
+<div id="id01" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="document.getElementById('id01').style.display='none'">&times;</span>
+    <h3>Ajouter un point</h3>
+    <form action="#" method="POST" class="form-grid">
+      <div class="form-group">
+        <label>Nom du point</label>
+        <input type="text" name="nom_pt" required>
+      </div>
+      <div class="form-group">
+        <label>Capacité</label>
+        <input type="number" name="capacite" required>
+      </div>
+      <div class="form-group">
+        <label>Lieu</label>
+        <input type="text" name="lieu" required>
+      </div>
+      <div class="form-group">
+        <label>État actuel</label>
+        <select name="Etat">
+          <option value="vide">Vide</option>
+          <option value="rempli">Rempli</option>
+        </select>
+      </div>
+      <div class="form-group" style="grid-column: 1 / span 2;">
+        <label>Date de vidange</label>
+        <input type="datetime-local" name="date_vidange" value="<?php echo date('Y-m-d\TH:i'); ?>">
+      </div>
 
+      <!-- Champs latitude / longitude (remplis automatiquement par la carte) -->
+      <div class="form-group">
+        <label>Latitude</label>
+        <input type="text" name="latitude" id="latitude" placeholder="Cliquez sur la carte" readonly required>
+      </div>
+      <div class="form-group">
+        <label>Longitude</label>
+        <input type="text" name="longitude" id="longitude" placeholder="Cliquez sur la carte" readonly required>
+      </div>
+
+      <!-- Carte pour choisir la position -->
+      <div class="form-group" style="grid-column: 1 / span 2;">
+        <label>Choisissez la position du point sur la carte</label>
+        <div id="mapSelect" style="height:300px; border:1px solid #ccc; border-radius:6px;"></div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit">Ajouter</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Carte pour la sélection d'un point
+  var mapSelect = L.map('mapSelect').setView([4.05, 9.7], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap'
+  }).addTo(mapSelect);
+
+  var marker;
+
+  // Clic sur la carte → remplir les champs lat/lon
+  mapSelect.on('click', function(e) {
+      var lat = e.latlng.lat;
+      var lon = e.latlng.lng;
+
+      document.getElementById('latitude').value = lat;
+      document.getElementById('longitude').value = lon;
+
+      if (marker) {
+          mapSelect.removeLayer(marker);
+      }
+      marker = L.marker([lat, lon]).addTo(mapSelect);
+  });
+</script>
+
+  
+      </body>
   <!-- Tableau -->
   <table>
     <thead>

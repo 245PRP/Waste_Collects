@@ -30,11 +30,7 @@ try {
 try {
     $sql = "
         SELECT 
-            utilisateur.nom_user,
-            signalement.motif,
-            signalement.date_signal,
-            signalement.adresse,
-            signalement.description
+            *
         FROM signalement
         INNER JOIN utilisateur 
             ON signalement.id_user = utilisateur.id_user
@@ -57,6 +53,10 @@ if(!$_SESSION['id_user']){
 } 
 $nom=$_SESSION["nom_user"];
 $role=$_SESSION["role"];
+// Récupérer tous les points
+$stmt = $cnx->prepare("SELECT * FROM point_collecte");
+$stmt->execute();
+$points = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -69,6 +69,35 @@ $role=$_SESSION["role"];
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <!-- CSS Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- CSS + JS du plugin Routing Machine -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+  <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+  <style>
+    #map { 
+      height: 500px; 
+    }
+    .popup-content { 
+      text-align: center; 
+    }
+    .btn-route {
+        display: inline-block;
+        margin-top: 5px;
+        padding: 6px 12px;
+        background: #2f4f4f;;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    .btn-route:hover {
+        background: #758687;
+    }
+  </style>
 </head>
 <body>
   <!-- SIDEBAR -->
@@ -263,7 +292,7 @@ $role=$_SESSION["role"];
           <td><?= htmlspecialchars($sig['nom_user']); ?></td>
           <td><span class="<?= $class; ?>"><?= $motif; ?></span></td>
           <td><?= $date; ?></td>
-          <td><?= htmlspecialchars($sig['adresse']); ?></td>
+          <td><?= htmlspecialchars($sig['lieu']); ?></td>
           <td><?= htmlspecialchars($sig['description']); ?></td>
         </tr>
       <?php endforeach; ?>
@@ -275,16 +304,86 @@ $role=$_SESSION["role"];
 
 
       <!-- MAP -->
-      <div class="card map-card">
-        <div class="map-head">
-          <div class="map-title">Rechercher</div>
-          <img src="../Images/rechercher.png" alt="" class="map-gear" />
-        </div>
-        <div id="map"></div>
-      </div>
-    </section>
-  </div>
+     <h2>Carte avec mes points et itinéraires</h2>
+<div id="map"></div>
 
+<script>
+  //  Initialisation de la carte 
+  var map = L.map('map').setView([4.05, 9.7], 13);
+
+  // Fond de carte OpenStreetMap (via Leaflet)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap'
+  }).addTo(map);
+
+  // === Définition de quelques points ===
+  var points = [
+    <?php foreach ($points as $point):?>
+
+      {nom: "<?= $point['nom_pt']; ?>", lat:  <?= $point['latitude'] ;?>, lon: <?= $point['longitude'] ;?>},
+      <?php endforeach;?>
+  ];
+  
+
+  // Stockage du routing control (itinéraire) pour pouvoir le réinitialiser
+  var routingControl = null;
+
+  // Fonction pour ajouter un marqueur
+  function ajouterPoint(p) {
+      var marker = L.marker([p.lat, p.lon]).addTo(map);
+
+      // Contenu du popup avec bouton
+      var popupContent = `
+        <div class="popup-content">
+          <h4>${p.nom}</h4>
+          <button class="btn-route" onclick="tracerItineraire(${p.lat}, ${p.lon})">
+          Lancer votre Itinéraire
+          </button>
+        </div>
+      `;
+
+      marker.bindPopup(popupContent);
+  }
+
+  // Ajouter tous les points
+  points.forEach(ajouterPoint);
+
+ 
+  // === Fonction de traçage d'itinéraire ===
+  function tracerItineraire(destLat, destLon) {
+      // Si l’utilisateur accepte la géolocalisation
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+              var userLat = position.coords.latitude;
+              var userLon = position.coords.longitude;
+
+              // Supprimer l’ancien itinéraire s’il existe
+              if (routingControl) {
+                  map.removeControl(routingControl);
+              }
+
+              // Créer le nouvel itinéraire
+              routingControl = L.Routing.control({
+                  waypoints: [
+                      L.latLng(userLat, userLon),
+                      L.latLng(destLat, destLon)
+                  ],
+                  routeWhileDragging: false,
+                  language: 'fr'
+              }).addTo(map);
+
+          }, function() {
+              alert("Impossible de récupérer votre position.");
+          });
+      } else {
+          alert("La géolocalisation n'est pas supportée par votre navigateur.");
+      }
+  }
+
+</script>
+ 
+</body>
+</html>
   <!-- Leaflet -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="../Javascript/dashscript.js"></script>

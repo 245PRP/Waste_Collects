@@ -2,107 +2,63 @@
 //connexion à la base de donnée
 try {
     $cnx= new PDO("mysql:host=localhost;dbname=waste_collect","root","");
+    $cnx->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 }
 catch(PDOException $e){
-    echo"Erreur de connexion à la base de donnée veuillez réesayer plutard:".$e->getMessage();
+    echo "Erreur de connexion à la base de donnée veuillez réessayer plus tard: " . $e->getMessage();
+    exit;
 }
 
-//récupérer le nombre de points de collecte saturés
-$sql_satures="SELECT COUNT(*)   AS total FROM point_collecte WHERE Etat = 'rempli'";
-$stmt = $cnx->query($sql_satures);
-    if ($stmt === false) {
-        throw new Exception("Erreur dans la requête : $sql_satures");
-    }
-    $row_satures = $stmt->fetch(PDO::FETCH_ASSOC);
-    $total_satures = $row_satures['total'];
+/* --- Stats existantes --- */
+$sql_satures="SELECT COUNT(*) AS total FROM point_collecte WHERE Etat = 'rempli'";
+$total_satures = $cnx->query($sql_satures)->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
-// récupérer les point de collecte Vide
-$sql_vides="SELECT COUNT(*)   AS total FROM point_collecte WHERE Etat = 'vide'";
-$stmt = $cnx->query($sql_vides);
-    if ($stmt === false) {
-        throw new Exception("Erreur dans la requête : $sql_vides");
-    }
-    $row_vides = $stmt->fetch(PDO::FETCH_ASSOC);
-    $total_vides = $row_vides['total'];
+$sql_vides="SELECT COUNT(*) AS total FROM point_collecte WHERE Etat = 'vide'";
+$total_vides = $cnx->query($sql_vides)->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
+$sql_signalements_total = "SELECT COUNT(*) AS total FROM signalement";
+$total_signalements = $cnx->query($sql_signalements_total)->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
-//récupérer le nombre de signalement
-$sql_signalements = "SELECT COUNT(*) AS total FROM signalement";
-$stmt = $cnx->query($sql_signalements);
-if ($stmt === false) {
-    throw new Exception("Erreur dans la requête : $sql_signalements");
-}
-$row_signalements = $stmt->fetch(PDO::FETCH_ASSOC);
-$total_signalements = $row_signalements['total'];
-
-
-//récupérer le nombre de camion disponible
 $sql_camion = "SELECT COUNT(*) AS total FROM camion";
-$stmt = $cnx->query($sql_camion);
-if ($stmt === false) {
-    throw new Exception("Erreur dans la requête : $sql_camion");
-}
-$row_camion = $stmt->fetch(PDO::FETCH_ASSOC);
-$total_camion = $row_camion['total'];
+$total_camion = $cnx->query($sql_camion)->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
-
-//récupérer le nombre de points de collecte ajoutés
 $sql_vidanges = "SELECT COUNT(*) AS total FROM point_collecte WHERE date_vidange >= CURDATE() AND date_vidange < CURDATE() + INTERVAL 1 DAY";
+$total_vidanges = $cnx->query($sql_vidanges)->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
-$stmt = $cnx->query($sql_vidanges);
-$total_vidanges = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+$sql_chauffeur="SELECT COUNT(*) AS total FROM utilisateur WHERE role = 'chauffeur'";
+$total_chauffeur = $cnx->query($sql_chauffeur)->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
-
-
-
-
-
-// récupérer le nombre de chauffeurs total
-$sql_chauffeur="SELECT COUNT(*)   AS total FROM utilisateur WHERE role = 'chauffeur'";
-$stmt = $cnx->query($sql_chauffeur);
-    if ($stmt === false) {
-        throw new Exception("Erreur dans la requête : $sql_chauffeur");
-    }
-    $row_chauffeur = $stmt->fetch(PDO::FETCH_ASSOC);
-    $total_chauffeur = $row_chauffeur['total'];
-
-/* Retards chauffeurs
-$sqlRetards = "SELECT COUNT(*) AS total FROM chauffeurs WHERE statut='en_retard'";
-$stmt = $conn->prepare($sqlRetards);
-$stmt->execute();
-$nbRetards = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;*/
-
-// Points de collecte saturés (signalés 'Plein')
 $sqlPoints = "SELECT COUNT(*) AS total FROM point_collecte WHERE Etat='rempli'";
-$stmt = $cnx->prepare($sqlPoints);
-$stmt->execute();
-$nbPoints = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+$nbPoints = $cnx->query($sqlPoints)->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
-// Signalements (tous motifs confondus)
 $sqlSignalements = "SELECT COUNT(*) AS total FROM signalement";
-$stmt = $cnx->prepare($sqlSignalements);
-$stmt->execute();
-$nbSignalements = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+$nbSignalements = $cnx->query($sqlSignalements)->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
-// Total général
 $totalNotif = $nbPoints + $nbSignalements;
 
-
-
-
- session_start();
-if(!$_SESSION['id_user']){
+/* --- Session utilisateur --- */
+session_start();
+if(!isset($_SESSION['id_user']) || !$_SESSION['id_user']){
   header('Location:../Pages/login.html');
-
-
+  exit;
 } 
 $nom=$_SESSION["nom_user"];
 $role=$_SESSION["role"];
 
-// Récupérer tous les points
+/* --- Récupérer les points pour la carte --- */
 $stmt = $cnx->prepare("SELECT * FROM point_collecte");
 $stmt->execute();
 $points = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+/* --- Récupérer les signalements pour le tableau --- */
+$sql_signals = "
+  SELECT s.id_sign, u.nom_user, s.motif, p.nom_pt, s.date_signal
+  FROM signalement s
+  LEFT JOIN utilisateur u ON s.id_user = u.id_user
+  LEFT JOIN point_collecte p ON s.id_pt = p.id_pt
+  ORDER BY s.date_signal DESC
+";
+$signalements = $cnx->query($sql_signals)->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -111,106 +67,84 @@ $points = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>WASTE Collect</title>
   <link rel="stylesheet" href="../CSS/dashstyle.css" />
+
+  <!-- Font Awesome (icônes sidebar) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-  <!-- CSS Leaflet -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-  <!-- CSS + JS du plugin Routing Machine -->
+  <!-- Routing -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
   <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
+  <!-- DataTables -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
   <style>
-    #map { 
-      height: 500px; 
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 560px; 
+      gap: 20px;
+      align-items: start;
+      margin-top: 20px;
     }
-    .popup-content { 
-      text-align: center; 
+
+    /* Conteneur tableau */
+    .table-card { background: #fff; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+    .table-card table { width: 100%; border-collapse: collapse; }
+    .table-card th, .table-card td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
+    .table-card thead th { background: #f7f7f7; text-transform: uppercase; font-size: 12px; color: #666; }
+
+    /* Conteneur carte */
+    .carte-container { background: #fff; border-radius: 12px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    #map { height: 500px; width: 100%; border-radius: 10px; }
+
+    /* Masquer la recherche native DataTables */
+    .dataTables_filter { display: none !important; }
+
+    /* Badges motifs */
+    .badge { padding: 4px 10px; border-radius: 12px; font-size: 12px; color: #fff; font-weight: 700; display:inline-block; }
+    .badge-plein { background: #d9534f; }
+    .badge-casse { background: #f0ad4e; }
+    .badge-renverse { background: #6f42c1; }
+    .badge-absent { background: #6c757d; }
+    .badge-autre { background: #0275d8; }
+
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+      #map { height: 360px; margin-top: 12px; }
     }
-    .btn-route {
-        display: inline-block;
-        margin-top: 5px;
-        padding: 6px 12px;
-        background: #2f4f4f;;
-        color: white;
-        text-decoration: none;
-        border-radius: 6px;
-        cursor: pointer;
-    }
-    .btn-route:hover {
-        background: #758687;
-    }
+    
   </style>
 </head>
 <body>
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="brand">
-      <!-- logo rond : remplace images/logo.png par ton image -->
-      <div class="logo-circle">
-        <img src="../Images/1.png" alt="WASTE Collect" />
-      </div>
-      
-    </div>
-
+    <div class="brand"><div class="logo-circle"><img src="../Images/1.png" alt="WASTE Collect" /></div></div>
     <nav class="menu">
       <?php if(($role==="chauffeur")){?>
-      
-      <a class="menu-item" href="../php/phpdash.php">
-        <i class="fa-solid fa-house" style="color: #cfa13b"></i><span>MES TOURNEES DE RAMASSAGE</span>
-      </a>
-      
-      <a class="menu-item" href="../php/info.php">
-        <i class="fa-solid fa-truck" style="color: #cfa13b"></i>
-        <span>MES INFORMATIONS</span>
-      </a>
+        <a class="menu-item" href="../php/phpdash.php"><i class="fa-solid fa-house"></i><span>MES TOURNEES</span></a>
+        <a class="menu-item" href="../php/info.php"><i class="fa-solid fa-truck"></i><span>MES INFORMATIONS</span></a>
       <?php } ?>
       <?php if(($role==="administrateur")){?>
-
-        <a class="menu-item" href="../Pages/dashboard.php">
-        <i class="fa-solid fa-house" style="color: #cfa13b"></i><span>Accueil</span>
-      </a>
-      <a class="menu-item" href="../Pages/point.php">
-        <i class="fa-solid fa-calendar-check" style="color: #cfa13b"></i>
-        <span>Gestion des Points de Collecte</span>
-      </a>
-      
-      <a class="menu-item" href="../php/tourner.php">
-        <i class="fa-solid fa-truck" style="color: #cfa13b"></i>
-        <span>Tournées de ramassage</span>
-      </a>
-
-      <a class="menu-item" href="../php/signale.php">
-        <i class="fa-solid fa-calendar-check" style="color: #cfa13b"></i>
-        <span>Gestion des Signalements</span>
-      </a>
-       <a class="menu-item" href="../php/camion.php">
-        <i class="fa-solid fa-truck" style="color: #cfa13b"></i>
-        <span>Gestion des chauffeurs et camions</span>
-      </a>
-      <a class="menu-item" href="../php/stat.php">
-        <i class="fa-solid fa-chart-column" style="color: #cfa13b"></i>
-        <span>Analyse Statistiques</span>
-      </a>
-      <a class="menu-item" href="../php/config.php">
-        <i class="fa-solid fa-gears" style="color: #cfa13b"></i>
-        <span>Configuration</span>
-      </a>
-      <a class="menu-item" href="../php/notif.php">
-        <i class="fa-solid fa-bell" style="color: #cfa13b"></i>
-        <span>Notifications</span>
-      </a>
+        <a class="menu-item" href="../Pages/dashboard.php"><i class="fa-solid fa-house"style="color: #cfa13b"></i><span>Accueil</span></a>
+        <a class="menu-item" href="../Pages/point.php"><i class="fa-solid fa-calendar-check"style="color: #cfa13b"></i><span>Gestion Points de collecte</span></a>
+        <a class="menu-item" href="../php/tourner.php"><i class="fa-solid fa-truck"style="color: #cfa13b"></i><span>Tournées</span></a>
+        <a class="menu-item" href="../php/signale.php"><i class="fa-solid fa-calendar-check"style="color: #cfa13b"></i><span> Gestion des Signalements</span></a>
+        <a class="menu-item" href="../php/camion.php"><i class="fa-solid fa-truck"style="color: #cfa13b"></i><span> Gestion des Chauffeurs & Camions</span></a>
+        <a class="menu-item" href="../php/stat.php"><i class="fa-solid fa-chart-column"style="color: #cfa13b"></i><span>Statistiques</span></a>
+        <a class="menu-item" href="../php/config.php"><i class="fa-solid fa-gears"style="color: #cfa13b"></i><span>Configuration</span></a>
+        <a class="menu-item" href="../php/notif.php"><i class="fa-solid fa-bell"style="color: #cfa13b"></i><span>Notifications</span></a>
       <?php } ?>
-      <a class="menu-item" href="../php/logout.php">
-        <i class="fa-solid fa-arrow-right-from-bracket" style="color: #cfa13b"></i>
-        <span>Déconnexion</span>
-      </a>
+      <a class="menu-item" href="../php/logout.php"><i class="fa-solid fa-arrow-right-from-bracket"style="color: #cfa13b"></i><span>Déconnexion</span></a>
     </nav>
   </aside>
 
-  <!-- MAIN -->
+<!-- MAIN -->
   <div class="main">
     <!-- HEADER -->
     <header class="header">
@@ -293,404 +227,97 @@ $points = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
       </script>
     </header>
-
+      
     <!-- STATS -->
     <section class="stats">
-      <article class="stat">
-        <div class="stat-title">Points de collecte Saturés</div>
-        <div class="stat-value"><?php echo $total_satures; ?></div>
-      </article>
-      <article class="stat">
-        <div class="stat-title">Points de collecte Vides</div>
-        <div class="stat-value"><?php echo $total_vides; ?></div>
-      </article>
-      <article class="stat">
-        <div class="stat-title">Nombre de Signalements</div>
-        <div class="stat-value"><?php echo $total_signalements; ?></div>
-      </article>
-      <article class="stat">
-        <div class="stat-title">Nombre de Camion</div>
-        <div class="stat-value"><?php echo $total_camion; ?></div>
-      </article>
-      <article class="stat">
-        <div class="stat-title">Points de collecte Ajoutés</div>
-        <div class="stat-value"><?php echo $total_vidanges; ?></div>
-      </article>
-      <article class="stat">
-        <div class="stat-title">Nombres de Chauffeurs</div>
-        <div class="stat-value"><?php echo $total_chauffeur; ?></div>
-      </article>
+      <article class="stat"><div class="stat-title">Saturés</div><div class="stat-value"><?php echo $total_satures; ?></div></article>
+      <article class="stat"><div class="stat-title">Vides</div><div class="stat-value"><?php echo $total_vides; ?></div></article>
+      <article class="stat"><div class="stat-title">Signalements</div><div class="stat-value"><?php echo $total_signalements; ?></div></article>
+      <article class="stat"><div class="stat-title">Camions</div><div class="stat-value"><?php echo $total_camion; ?></div></article>
+      <article class="stat"><div class="stat-title">Ajoutés</div><div class="stat-value"><?php echo $total_vidanges; ?></div></article>
+      <article class="stat"><div class="stat-title">Chauffeurs</div><div class="stat-value"><?php echo $total_chauffeur; ?></div></article>
     </section>
 
     <!-- TABLE + MAP -->
     <section class="grid">
       <!-- TABLE -->
-      <div class="card table-card">
-        <div class="table-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th>
-                  NOM
-                </th>
-                <th>
-                  MOTIF DE SIGNALEMENT
-                </th>
-                <th>
-                  LIEUX
-                </th>
-                <th>
-                  DATE
-                </th>
-                <th>
-                 HEURE
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>NOUFEYA VICTOIRE</td>
-                <td><span class="badge badge-casse">Cassé</span></td>
-                <td>Yassa</td>
-                <td>14/08/2025</td>
-                <td>10:32</td>
-              </tr>
-              <tr>
-                <td>MBOUTOU KAREYCE</td>
-                <td><span class="badge badge-plein">Plein</span></td>
-                <td>Marché Central</td>
-                <td>14/08/2025</td>
-                <td>09:18</td>
-              </tr>
-              <tr>
-                <td>MBOENE VANELLE</td>
-                <td><span class="badge badge-absent">Absent</span></td>
-                <td>Dakar</td>
-                <td>13/08/2025</td>
-                <td>16:47</td>
-              </tr>
-              <tr>
-                <td>SCHEMIMA "P"</td>
-                <td><span class="badge badge-plein">Plein</span></td>
-                <td>Bonamoussadi</td>
-                <td>13/08/2025</td>
-                <td>11:06</td>
-              </tr>
-              <tr>
-                <td>NYA JACQUES</td>
-                <td><span class="badge badge-renverse">Renversé</span></td>
-                <td>Yassa</td>
-                <td>12/08/2025</td>
-                <td>18:25</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="table-card">
+        <h3>Signalements récents</h3>
+        <table id="signalementsTable" class="display">
+          <thead><tr><th>NOM</th><th>MOTIF</th><th>LIEU</th><th>DATE</th><th>HEURE</th></tr></thead>
+          <tbody>
+            <?php foreach($signalements as $s): 
+              $date = $heure = ''; if (!empty($s['date_signal'])) { $dt = new DateTime($s['date_signal']); $date = $dt->format('d/m/Y'); $heure = $dt->format('H:i'); }
+              $motif = htmlspecialchars($s['motif'] ?? ''); $motif_lower = mb_strtolower($motif); $badgeClass = 'badge-autre';
+              if (strpos($motif_lower,'plein') !== false) $badgeClass = 'badge-plein';
+              elseif (strpos($motif_lower,'cass') !== false) $badgeClass = 'badge-casse';
+              elseif (strpos($motif_lower,'renvers') !== false) $badgeClass = 'badge-renverse';
+              elseif (strpos($motif_lower,'absent') !== false) $badgeClass = 'badge-absent';
+            ?>
+            <tr>
+              <td><?= htmlspecialchars($s['nom_user'] ?? 'Anonyme') ?></td>
+              <td><span class="badge <?= $badgeClass ?>"><?= $motif ?: '—' ?></span></td>
+              <td><?= htmlspecialchars($s['nom_pt'] ?? '—') ?></td>
+              <td><?= $date ?></td>
+              <td><?= $heure ?></td>
+            </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
       </div>
 
-      <!-- MAP -->
-     <h2>Carte avec mes points et itinéraires</h2>
-<div id="map"></div>
+      <!-- CARTE -->
+      <div class="carte-container">
+        <h3>Carte avec mes points</h3>
+        <div id="map"></div>
+      </div>
+    </section>
+  </div>
 
 <script>
-  //  Initialisation de la carte 
-  var map = L.map('map').setView([4.05, 9.7], 13);
-
-  // Fond de carte OpenStreetMap (via Leaflet)
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap'
-  }).addTo(map);
-
-  // === Définition de quelques points ===
-  var points = [
-    <?php foreach ($points as $point):?>
-
-      {nom: "<?= $point['nom_pt']; ?>", lat:  <?= $point['latitude'] ;?>, lon: <?= $point['longitude'] ;?>},
-      <?php endforeach;?>
-  ];
-  
-
-  // Stockage du routing control (itinéraire) pour pouvoir le réinitialiser
-  var routingControl = null;
-
-  // Fonction pour ajouter un marqueur
-  function ajouterPoint(p) {
-      var marker = L.marker([p.lat, p.lon]).addTo(map);
-
-      // Contenu du popup avec bouton
-      var popupContent = `
-        <div class="popup-content">
-          <h4>${p.nom}</h4>
-          <button class="btn-route" onclick="tracerItineraire(${p.lat}, ${p.lon})">
-          Lancer votre Itinéraire
-          </button>
-        </div>
-      `;
-
-      marker.bindPopup(popupContent);
+  function toggleDropdown(e) {
+    if (e) e.stopPropagation();
+    document.getElementById('notifDropdown').classList.toggle('show');
   }
+  document.addEventListener('click', e => { if (!e.target.closest('.dropdown')) document.getElementById('notifDropdown').classList.remove('show'); });
 
-  // Ajouter tous les points
+  // DataTable
+  $(document).ready(function() {
+    var table = $('#signalementsTable').DataTable({
+      pageLength: 7,
+      language: { url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json" }
+    });
+    $('.header input[type="search"]').on('keyup', function(){ table.search(this.value).draw(); });
+  });
+
+  // Leaflet Map
+  var map = L.map('map').setView([4.05, 9.7], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+  var points = [
+    <?php foreach ($points as $point): ?>
+      {nom: <?= json_encode($point['nom_pt']) ?>, lat: <?= (float)$point['latitude'] ?>, lon: <?= (float)$point['longitude'] ?>},
+    <?php endforeach; ?>
+  ];
+
+  var routingControl = null;
+  function ajouterPoint(p) {
+    var marker = L.marker([p.lat, p.lon]).addTo(map);
+    marker.bindPopup(`<h4>${p.nom}</h4><button onclick="tracerItineraire(${p.lat}, ${p.lon})">Itinéraire</button>`);
+  }
   points.forEach(ajouterPoint);
 
- 
-  // === Fonction de traçage d'itinéraire ===
   function tracerItineraire(destLat, destLon) {
-      // Si l’utilisateur accepte la géolocalisation
-      if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-              var userLat = position.coords.latitude;
-              var userLon = position.coords.longitude;
-
-              // Supprimer l’ancien itinéraire s’il existe
-              if (routingControl) {
-                  map.removeControl(routingControl);
-              }
-
-              // Créer le nouvel itinéraire
-              routingControl = L.Routing.control({
-                  waypoints: [
-                      L.latLng(userLat, userLon),
-                      L.latLng(destLat, destLon)
-                  ],
-                  routeWhileDragging: false,
-                  language: 'fr'
-              }).addTo(map);
-
-          }, function() {
-              alert("Impossible de récupérer votre position.");
-          });
-      } else {
-          alert("La géolocalisation n'est pas supportée par votre navigateur.");
-      }
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        if (routingControl) map.removeControl(routingControl);
+        routingControl = L.Routing.control({
+          waypoints: [L.latLng(pos.coords.latitude, pos.coords.longitude), L.latLng(destLat, destLon)],
+          language: 'fr'
+        }).addTo(map);
+      }, () => alert("Position non trouvée."));
+    } else { alert("Géolocalisation non supportée."); }
   }
-
 </script>
- 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

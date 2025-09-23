@@ -37,7 +37,7 @@ body{
 .sidebar{
     grid-area:sidebar; 
     background:var(--sidebar); 
-    color:#fff; 
+    color:#cfa13b; 
     padding:18px 16px; 
     display:flex; 
     flex-direction:column; 
@@ -87,7 +87,7 @@ body{
   align-items:center; 
   gap:12px; 
   padding:12px 12px;
-  color:#e9f3f3; 
+  color:#cfa13b; 
   text-decoration:none; 
   border-radius:16px; 
   transition:2s;
@@ -99,6 +99,7 @@ body{
     width:22px; 
     height:22px; 
     object-fit:contain;
+    color: #cfa13b;
 }
 
 /*Header entete */
@@ -280,6 +281,9 @@ tbody tr:hover{
     height:520px;
 
 }
+
+
+
 
 
 /* Responsive */

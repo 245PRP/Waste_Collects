@@ -59,6 +59,7 @@ $points = $stmt->fetchAll(PDO::FETCH_ASSOC);
       display: block;
       font-size: 18px;
       color: #2b8aef;
+      
     }
     .map-menu nav a {
       display: block;
@@ -118,7 +119,7 @@ $points = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="map-menu">
   <div class="brand">
     <img src="../Images/1.png" alt="Logo Waste Collect">
-    <strong>Waste Collect</strong>
+    
   </div>
   <nav>
     <a href="signal.php"><i class="fa-solid fa-bullhorn"></i> Effectuer un signalement</a>

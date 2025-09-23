@@ -381,12 +381,8 @@ $points = $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
 </script>
- 
+</section> 
 </body>
 </html>
-  <!-- Leaflet -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="../Javascript/dashscript.js"></script>
-</body>
-</html>
+  
 

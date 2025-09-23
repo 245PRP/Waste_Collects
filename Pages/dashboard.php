@@ -271,7 +271,7 @@ $signalements = $cnx->query($sql_signals)->fetchAll(PDO::FETCH_ASSOC);
         <h3>Carte avec mes points</h3>
         <div id="map"></div>
       </div>
-    </section>
+    
   </div>
 
 <script>
@@ -319,5 +319,6 @@ $signalements = $cnx->query($sql_signals)->fetchAll(PDO::FETCH_ASSOC);
     } else { alert("Géolocalisation non supportée."); }
   }
 </script>
+</section>
 </body>
 </html>

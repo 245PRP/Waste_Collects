@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : ven. 19 sep. 2025 à 22:18
+-- Généré le : mar. 23 sep. 2025 à 11:38
 -- Version du serveur : 5.7.36
 -- Version de PHP : 7.4.26
 
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `point_collecte` (
   `latitude` float NOT NULL,
   `longitude` float NOT NULL,
   PRIMARY KEY (`id_pt`)
-) ENGINE=MyISAM AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=38 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `point_collecte`
@@ -74,7 +74,8 @@ INSERT INTO `point_collecte` (`id_pt`, `nom_pt`, `lieu`, `capacite`, `Etat`, `da
 (14, 'point yassa', 'douala', 228, 'rempli', '2025-09-04 09:25:00.00', 0, 0),
 (34, 'point yassa', 'Douala', 255, 'vide', '2025-09-19 15:41:00.00', 4.05055, 9.73927),
 (35, 'POINT CITE SIC', 'Douala', 250, 'vide', '2025-09-19 16:12:00.00', 4.0598, 9.7233),
-(36, 'POINT VALLEE', 'Douala', 540, 'vide', '2025-09-19 17:31:00.00', 4.04659, 9.73955);
+(36, 'POINT VALLEE', 'Douala', 540, 'vide', '2025-09-19 17:31:00.00', 4.04659, 9.73955),
+(37, 'Point NDOP', 'douala', 450, 'vide', '2025-09-23 04:46:00.00', 4.04402, 9.77835);
 
 -- --------------------------------------------------------
 

@@ -127,13 +127,16 @@ $signalements = $cnx->query($sql_signals)->fetchAll(PDO::FETCH_ASSOC);
     <div class="brand"><div class="logo-circle"><img src="../Images/1.png" alt="WASTE Collect" /></div></div>
     <nav class="menu">
       <?php if(($role==="chauffeur")){?>
-        <a class="menu-item" href="../php/phpdash.php"><i class="fa-solid fa-house"></i><span>MES TOURNEES</span></a>
-        <a class="menu-item" href="../php/info.php"><i class="fa-solid fa-truck"></i><span>MES INFORMATIONS</span></a>
+        <a class="menu-item" href="../php/phpdash.php"><i class="fa-solid fa-house" style="color: #cfa13b"></i><span>Mes Tournées de Ramassage</span></a>
+        <a class="menu-item" href="../php/info.php"><i class="fa-solid fa-truck"style="color: #cfa13b"></i><span>MES INFORMATIONS</span></a>
+        <a class="menu-item" href="../php/statut.php">
+        <i class="fa-solid fa-house" style="color: #cfa13b"></i><span>Statuts de mes Tournées </span>
+      </a>
       <?php } ?>
       <?php if(($role==="administrateur")){?>
         <a class="menu-item" href="../Pages/dashboard.php"><i class="fa-solid fa-house"style="color: #cfa13b"></i><span>Accueil</span></a>
         <a class="menu-item" href="../Pages/point.php"><i class="fa-solid fa-calendar-check"style="color: #cfa13b"></i><span>Gestion Points de collecte</span></a>
-        <a class="menu-item" href="../php/tourner.php"><i class="fa-solid fa-truck"style="color: #cfa13b"></i><span>Tournées</span></a>
+        <a class="menu-item" href="../php/tourner.php"><i class="fa-solid fa-truck"style="color: #cfa13b"></i><span>Tournées de ramassage</span></a>
         <a class="menu-item" href="../php/signale.php"><i class="fa-solid fa-calendar-check"style="color: #cfa13b"></i><span> Gestion des Signalements</span></a>
         <a class="menu-item" href="../php/camion.php"><i class="fa-solid fa-truck"style="color: #cfa13b"></i><span> Gestion des Chauffeurs & Camions</span></a>
         <a class="menu-item" href="../php/stat.php"><i class="fa-solid fa-chart-column"style="color: #cfa13b"></i><span>Statistiques</span></a>
@@ -230,12 +233,12 @@ $signalements = $cnx->query($sql_signals)->fetchAll(PDO::FETCH_ASSOC);
       
     <!-- STATS -->
     <section class="stats">
-      <article class="stat"><div class="stat-title">Saturés</div><div class="stat-value"><?php echo $total_satures; ?></div></article>
-      <article class="stat"><div class="stat-title">Vides</div><div class="stat-value"><?php echo $total_vides; ?></div></article>
-      <article class="stat"><div class="stat-title">Signalements</div><div class="stat-value"><?php echo $total_signalements; ?></div></article>
-      <article class="stat"><div class="stat-title">Camions</div><div class="stat-value"><?php echo $total_camion; ?></div></article>
-      <article class="stat"><div class="stat-title">Ajoutés</div><div class="stat-value"><?php echo $total_vidanges; ?></div></article>
-      <article class="stat"><div class="stat-title">Chauffeurs</div><div class="stat-value"><?php echo $total_chauffeur; ?></div></article>
+      <article class="stat"><div class="stat-title">Point de collecte Saturés</div><div class="stat-value"><?php echo $total_satures; ?></div></article>
+      <article class="stat"><div class="stat-title">Point de collecte Vides</div><div class="stat-value"><?php echo $total_vides; ?></div></article>
+      <article class="stat"><div class="stat-title">Nombre de Signalements</div><div class="stat-value"><?php echo $total_signalements; ?></div></article>
+      <article class="stat"><div class="stat-title">Nombre de Camions</div><div class="stat-value"><?php echo $total_camion; ?></div></article>
+      <article class="stat"><div class="stat-title">Point de collecte Ajoutés</div><div class="stat-value"><?php echo $total_vidanges; ?></div></article>
+      <article class="stat"><div class="stat-title">Nombre de Chauffeurs</div><div class="stat-value"><?php echo $total_chauffeur; ?></div></article>
     </section>
 
     <!-- TABLE + MAP -->
@@ -268,7 +271,7 @@ $signalements = $cnx->query($sql_signals)->fetchAll(PDO::FETCH_ASSOC);
 
       <!-- CARTE -->
       <div class="carte-container">
-        <h3>Carte avec mes points</h3>
+        <h3>Zone des Points de Collecte</h3>
         <div id="map"></div>
       </div>
     

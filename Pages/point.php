@@ -1,4 +1,9 @@
 <?php
+session_start();
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require '../vendor/autoload.php';
+
 //connexion à la base de donnée
 try {
     $cnx= new PDO("mysql:host=localhost;dbname=waste_collect","root","");
@@ -6,6 +11,10 @@ try {
 catch(PDOException $e){
     echo"Erreur de connexion à la base de donnée veuillez réesayer plus tard:".$e->getMessage();
 }
+// Récupérer tous les utilisateurs
+    $stmt = $cnx->query("SELECT id_user, email FROM utilisateur WHERE role='citoyen'");
+    $utilisateurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 // Ajouter un point
 if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -16,6 +25,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $date=$_POST['date_vidange'];
     $lat = (float) $_POST['latitude'];
     $lon = (float) $_POST['longitude'];
+     $mail = new PHPMailer(true);
+    
+
+    $email_message= "le point de collecte " .$nom. " vient d/'etre ajouté et pret à l'emploi  et il est situé ".$lieu;
 
     try {
         $stmt=$cnx->prepare('INSERT INTO point_collecte(nom_pt,lieu,capacite,Etat,date_vidange,latitude,longitude) VALUES (:nom_pt,:lieu,:capacite,:Etat,:date_vidange,:latitude,:longitude)');
@@ -27,6 +40,34 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $stmt->bindParam(':latitude', $lat);
         $stmt->bindParam(':longitude', $lon);
         $stmt->execute();
+
+
+        
+        foreach ($utilisateurs as $users) {
+            try {
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'prunellendonkeu@gmail.com';
+        $mail->Password   = 'immd pfrm cunu mjgl';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
+
+      $mail->setFrom('prunellendonkeu@gmail.com', 'MAP App');
+
+        $mail->addAddress($users['email']);
+
+        $mail->isHTML(true);
+        $mail->Subject = "Nouveau Point de collecte Ajouté";
+        $mail->Body    = nl2br($email_message);
+
+        $mail->send();
+        $message = "✅ Mail envoyé avec succès à {$users['email']}";
+    } catch (Exception $e) {
+        $message = "❌ Erreur : {$mail->ErrorInfo}";
+    }
+  
+        }
     } catch (PDOException $e) {
         echo "Erreur d'insertion des points : ".$e->getMessage();
     }
@@ -51,7 +92,7 @@ if (isset($_GET['supprimerid_pt'])) {
     header('Location: point.php');
 }
 
-session_start();
+
 if(!$_SESSION['id_user']){
   header('Location:../Pages/login.html');
 } 

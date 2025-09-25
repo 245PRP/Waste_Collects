@@ -1,6 +1,7 @@
 table {
     width: 100%;
     border-collapse: collapse;
+    background-color: #fff;
   }
   thead {
     background: #f5f5f5;
@@ -34,4 +35,89 @@ table {
     height:auto; 
     object-fit:contain;
     border-radius: 70px;
+}
+/* --- LAYOUT : tableau (gauche) + carte (droite) --- */
+.section-grid {
+  display: flex;
+  gap: 24px;                 /* espace entre les colonnes */
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;           /* passe en stack sur petit écran */
+  margin: 20px 0;
+}
+
+/* Conteneur de la colonne gauche (tableau) */
+.table-column {
+  flex: 1 1 48%;             /* prend ~48% de largeur mais peut réduire */
+  min-width: 300px;          /* pour rester lisible */
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+/* Faire défiler le tableau si trop grand verticalement */
+.table-scroll {
+  max-height: 520px;         /* ajuste selon besoin */
+  overflow-y: auto;
+  padding: 8px;
+  background: transparent;
+  border-radius: 12px;
+}
+
+/* Mise en page du tableau */
+.table-column table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Exemple d'améliorations visuelles du tableau (optionnel) */
+.table-column th, .table-column td {
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  font-size: 14px;
+}
+
+/* Conteneur de la colonne droite (carte) */
+.map-column {
+  flex: 1 1 50%;
+  min-width: 320px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Wrapper autour de la carte pour le cadre blanc arrondi */
+.map-wrapper {
+  background: #ffffff;       /* cadre blanc */
+  border-radius: 14px;       /* coins arrondis */
+  padding: 10px;             /* espace entre la bordure blanche et la carte */
+  box-shadow: 0 6px 18px rgba(22, 28, 36, 0.08);
+  overflow: hidden;
+}
+
+/* La vraie div #map garde la hauteur mais devient 100% en largeur */
+#map {
+  width: 100%;
+  height: 500px;             /* tu peux ajuster */
+  border-radius: 8px;        /* coins internes de la carte */
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03);
+  
+}
+
+/* Titre de la carte aligné proprement */
+.map-title {
+  margin: 0 0 6px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+  padding-left: 2px;
+}
+
+/* Responsive : sur petits écrans on stack verticalement */
+@media (max-width: 900px) {
+  .section-grid { gap: 12px; }
+  .table-column, .map-column { flex: 1 1 100%; min-width: unset; }
+  #map { height: 420px; }
 }

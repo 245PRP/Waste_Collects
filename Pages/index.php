@@ -39,7 +39,7 @@ $points = $stmt->fetchAll(PDO::FETCH_ASSOC);
     .map-menu {
       position: absolute; 
       top: 20px; left: 20px;
-      width: 280px;
+      width: 400px;
       background: #ffffffee; 
       border-radius: 20px;
       z-index: 1000;
@@ -51,7 +51,7 @@ $points = $stmt->fetchAll(PDO::FETCH_ASSOC);
       margin-bottom: 15px;
     }
     .map-menu .brand img {
-      width: 70px;
+      width: 100%;
       height: auto;
       margin-bottom: 8px;
     }
@@ -74,7 +74,7 @@ $points = $stmt->fetchAll(PDO::FETCH_ASSOC);
       transition: all 0.3s ease;
     }
     .map-menu nav a:hover {
-      background: #2b8aef;
+      background: #2f4f4f;
       color: #fff;
     }
 
@@ -99,7 +99,7 @@ $points = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     .modal-content h3 {
       margin-top: 0;
-      color: #2b8aef;
+      color: #2f4f4f;
     }
     .modal-content button {
       margin: 10px;
@@ -109,7 +109,7 @@ $points = $stmt->fetchAll(PDO::FETCH_ASSOC);
       cursor: pointer;
     }
     .btn-close { background: #ccc; }
-    .btn-route { background: #2b8aef; color: #fff; }
+    .btn-route { background: #2f4f4f; color: #fff; }
   </style>
 </head>
 <body>
@@ -123,7 +123,7 @@ $points = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
   <nav>
     <a href="signal.php"><i class="fa-solid fa-bullhorn"></i> Effectuer un signalement</a>
-    <a href="trouv.html"><i class="fa-solid fa-map-marker-alt"></i> Trouver un point de collecte</a>
+    <a href="#"><i class="fa-solid fa-map-marker-alt"></i> Trouver un point de collecte proche de chez moi</a>
     <a href="login.html"><i class="fa-solid fa-user"></i> Se connecter</a>
   </nav>
 </div>
@@ -205,5 +205,8 @@ $points = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
   }
 </script>
+<script>
+  
+  </script>
 </body>
 </html>

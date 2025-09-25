@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             } elseif ($role === "citoyen") {
                 header("Location: ../Pages/signal.php");
             } elseif ($role === "chauffeur") {
-                header("Location: ../Pages/dashboard.php");
+                header("Location: ../php/phpdash.php");
             } else {
                 echo "Rôle non reconnu.";
             }

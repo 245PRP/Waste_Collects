@@ -1,5 +1,8 @@
  <?php
  session_start();
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require '../vendor/autoload.php';
  //connexion à la base de donnée
 try {
     $cnx= new PDO("mysql:host=localhost;dbname=waste_collect","root","");
@@ -13,17 +16,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $date    = $_POST['date_tour'];
 
     try {
+        // Insertion
         $stmt = $cnx->prepare("INSERT INTO ramassage (id_user, id_pt, date_tour) VALUES (:id_user, :id_pt, :date_tour)");
         $stmt->bindParam(':id_user', $id_user);
         $stmt->bindParam(':id_pt', $point);
         $stmt->bindParam(':date_tour', $date);
         $stmt->execute();
 
-        
+        // Récupérer infos chauffeur
+        $chauffeurStmt = $cnx->prepare("SELECT email, nom_user FROM utilisateur WHERE id_user = :id");
+        $chauffeurStmt->execute([':id' => $id_user]);
+        $chauffeur = $chauffeurStmt->fetch(PDO::FETCH_ASSOC);
+
+        // Récupérer nom du point
+        $pointStmt = $cnx->prepare("SELECT nom_pt FROM point_collecte WHERE id_pt = :id");
+        $pointStmt->execute([':id' => $point]);
+        $pointInfo = $pointStmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($chauffeur && $pointInfo) {
+            // Préparer le mail
+            $mail = new PHPMailer(true);
+            try {
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'prunellendonkeu@gmail.com'; // remplace par ton email
+                $mail->Password   = 'immd pfrm cunu mjgl'; // mot de passe application
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port       = 587;
+
+                $mail->setFrom('prunellendonkeu@gmail.com', 'Waste Collect');
+                $mail->addAddress($chauffeur['email'], $chauffeur['nom_user']);
+
+                $mail->isHTML(true);
+                $mail->Subject = "Planification de tournée";
+                $mail->Body    = "Bonjour <b>{$chauffeur['nom_user']}</b>,<br><br>"
+                                ."Vous avez été planifié pour une tournée de ramassage.<br>"
+                                ."📍 Point de collecte : <b>{$pointInfo['nom_pt']}</b><br>"
+                                ."📅 Date : <b>{$date}</b><br><br>"
+                                ."Merci de vous préparer.<br><br>"
+                                ."Cordialement,<br>L’équipe Waste Collect";
+
+                $mail->send();
+            } catch (Exception $e) {
+                // Tu peux logger l’erreur si besoin
+            }
+        }
+
+        // ✅ Message pour l’admin
+        $_SESSION['message'] = "✅ Tournée planifiée et email envoyé au chauffeur.";
         header("Location: tourner.php");
         exit();
     } catch (PDOException $e) {
-        echo "Erreur d'insertion: " . $e->getMessage();
+        $_SESSION['message'] = "❌ Erreur d'insertion : ".$e->getMessage();
+        header("Location: tourner.php");
+        exit();
     }
 }
 
@@ -93,8 +140,34 @@ $role=$_SESSION["role"];
   
   <!--<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css' rel='stylesheet' />
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js'></script>-->
+  <style>
+.alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: bold;
+  z-index: 9999;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  animation: fadein 0.5s, fadeout 0.5s 3.5s;
+}
+.alert-success { background: #28a745; }
+.alert-error { background: #dc3545; }
+@keyframes fadein { from {opacity:0;} to {opacity:1;} }
+@keyframes fadeout { from {opacity:1;} to {opacity:0;} }
+</style>
+
 </head>
 <body>
+  <?php if(isset($_SESSION['message'])): ?>
+  <div class="alert <?= strpos($_SESSION['message'],'❌')!==false ? 'alert-error' : 'alert-success' ?>">
+    <?= $_SESSION['message']; ?>
+  </div>
+  <?php unset($_SESSION['message']); ?>
+<?php endif; ?>
+
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="brand">

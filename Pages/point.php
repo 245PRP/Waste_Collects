@@ -53,7 +53,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 
-      $mail->setFrom('prunellendonkeu@gmail.com', 'MAP App');
+      $mail->setFrom('prunellendonkeu@gmail.com', 'Waste_collect');
 
         $mail->addAddress($users['email']);
 

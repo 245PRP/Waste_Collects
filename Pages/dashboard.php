@@ -122,7 +122,7 @@ $signalements = $cnx->query($sql_signals)->fetchAll(PDO::FETCH_ASSOC);
   </style>
 </head>
 <body>
-  <!-- SIDEBAR -->
+  SIDEBAR
   <aside class="sidebar">
     <div class="brand"><div class="logo-circle"><img src="../Images/1.png" alt="WASTE Collect" /></div></div>
     <nav class="menu">

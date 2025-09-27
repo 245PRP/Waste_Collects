@@ -5,6 +5,155 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Connexion</title>
 <link rel="stylesheet" href="../CSS/stylog.css">
+<style>
+    
+    .alert {
+        margin-bottom: 15px;
+        padding: 12px 18px;
+        border-radius: 6px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        animation: fadeIn 0.5s ease;
+    }
+    .alert-warning {
+        background-color: #fff3cd;
+        border: 1px solid #ffeeba;
+        color: #856404;
+    }
+    .alert-success {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+    }
+    .alert .icon {
+        font-weight: bold;
+        margin-right: 10px;
+        font-size: 18px;
+    }
+    .alert .close {
+        margin-left: auto;
+        cursor: pointer;
+        font-weight: bold;
+        border: none;
+        background: none;
+        font-size: 16px;
+        color: inherit;
+    }
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(-10px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+</style>
+</head>
+<body>
+     <!-- Zone d'affichage des alertes -->
+        <div id="alert-zone"></div>
+    <div class="overlay"></div>
+    <div class="form-container">
+
+       
+
+        <form action="../php/log.php" method="post">
+            <h1>Bienvenue</h1>
+            <p>Connectez vous à votre compte</p>
+            <input name="email" type="email" placeholder="Entrer votre email">
+            <input name="motdepasse" type="password" placeholder="Entrer votre Mot de Passe">
+            
+            <a href="#" class="forgot">Mot de passe oublié</a>
+            <a href="inscr.html" class="forgot">S'inscrire</a>
+            <input type="submit" value="Connexion" class="btn">
+        </form>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        if (params.has("error")) {
+            const message = params.get("error");
+            const alertBox = document.createElement("div");
+            alertBox.className = "alert alert-warning";
+            alertBox.innerHTML = `
+                <span class="icon">⚠️</span>
+                <span>${decodeURIComponent(message)}</span>
+                <button class="close" onclick="this.parentElement.style.display='none';">&times;</button>
+            `;
+            document.getElementById("alert-zone").appendChild(alertBox);
+
+            setTimeout(() => {
+                if (alertBox) alertBox.style.display = "none";
+            }, 5000);
+        }
+
+        if (params.has("success")) {
+            const message = params.get("success");
+            const alertBox = document.createElement("div");
+            alertBox.className = "alert alert-success";
+            alertBox.innerHTML = `
+                <span class="icon">✅</span>
+                <span>${decodeURIComponent(message)}</span>
+                <button class="close" onclick="this.parentElement.style.display='none';">&times;</button>
+            `;
+            document.getElementById("alert-zone").appendChild(alertBox);
+
+            setTimeout(() => {
+                if (alertBox) alertBox.style.display = "none";
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion</title>
+<link rel="stylesheet" href="../CSS/stylog.css">
 </head>
 <body>
     
@@ -22,4 +171,4 @@
         </form>
     </div>
 </body>
-</html>
+</html> -->

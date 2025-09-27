@@ -4,35 +4,28 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require '../vendor/autoload.php';
 
-//connexion à la base de donnée
 try {
     $cnx= new PDO("mysql:host=localhost;dbname=waste_collect","root","");
 }
 catch(PDOException $e){
     echo"Erreur de connexion à la base de donnée veuillez réesayer plutard:".$e->getMessage();
 }
-// affichage des points
+
 try{ 
 $sql="SELECT id_pt, nom_pt FROM point_collecte";
 $stmt=$cnx->prepare($sql);
-if($stmt===false){
-    throw new PDOException("Erreur lors de la preparation de la requete");
-}
 $stmt->execute();
 $points=$stmt->fetchAll();
-if($points===false){
-    throw new PDOException("Erreur lors de la recuperation de la requete");
-}
-
 }
 catch(PDOException $e){
     echo"Erreur:".$e->getMessage();
 } 
-// Récupérer tous les utilisateurs
-    $stmt = $cnx->query("SELECT id_user, email FROM utilisateur WHERE role='administrateur'");
-    $utilisateurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ajouter un point
+$stmt = $cnx->query("SELECT id_user, email FROM utilisateur WHERE role='administrateur'");
+$utilisateurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$success_message = ""; // ✅ pour stocker le message
+
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $motif=$_POST['motif'];
     $date=$_POST['date_signal'];
@@ -57,44 +50,30 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
         foreach ($utilisateurs as $users) {
             try {
-        $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
-        $mail->SMTPAuth   = true;
-        $mail->Username   = 'prunellendonkeu@gmail.com';
-        $mail->Password   = 'immd pfrm cunu mjgl';
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587;
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'prunellendonkeu@gmail.com';
+                $mail->Password   = 'immd pfrm cunu mjgl';
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port       = 587;
 
-      $mail->setFrom('prunellendonkeu@gmail.com', 'Waste_collect');
-
-        $mail->addAddress($users['email']);
-
-        $mail->isHTML(true);
-        $mail->Subject = "Nouveau signalement";
-        $mail->Body    = nl2br($email_message);
-
-        $mail->send();
-        $message = "✅ Mail envoyé avec succès à {$users['email']}";
-    } catch (Exception $e) {
-        $message = "❌ Erreur : {$mail->ErrorInfo}";
-    }
-  
+                $mail->setFrom('prunellendonkeu@gmail.com', 'Waste_collect');
+                $mail->addAddress($users['email']);
+                $mail->isHTML(true);
+                $mail->Subject = "Nouveau signalement";
+                $mail->Body    = nl2br($email_message);
+                $mail->send();
+            } catch (Exception $e) {}
         }
-        //header('Location: ../Pages/signal.html');
+
+        // ✅ Définir le message de succès
+        $success_message = "Votre signalement a bien été pris en compte ✅";
+
     } catch (PDOException $e) {
         echo"Erreur d'insertion des signalements dans la base de donnée".$e->getMessage();
     }
-
 }
-
-
-
-
-
-
-
-
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -102,6 +81,56 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <meta charset="UTF-8">
     <title>Formulaire de Signalement</title>
     <link rel="stylesheet" href="../CSS/style.css">
+    <style>
+        /* ✅ Style de l'alerte */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+        .toast {
+            display: flex;
+            align-items: center;
+            background: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+            padding: 12px 18px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            min-width: 280px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            animation: slideIn 1s, fadeOut 1s 3.5s forwards;
+        }
+        .icon {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: #3c763d;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .toast .close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: #3c763d;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateX(100%); }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -119,22 +148,40 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     <option value="renversé">Renversé</option>
                 </select>
                 <label for="limit">Choisissez un point</label>
-                        <select id="limit" name="point">
-                            <?php foreach ($points as $point) : ?>
-                        <option value=<?= $point['id_pt'] ?>><?= $point['nom_pt']?></option>
-                        <?php endforeach; ?>
-                        </select>
+                <select id="limit" name="point">
+                    <?php foreach ($points as $point) : ?>
+                        <option value="<?= $point['id_pt'] ?>"><?= $point['nom_pt']?></option>
+                    <?php endforeach; ?>
+                </select>
                 <label>Entrer la date et l'heure de votre signalement:</label>
                 <input type="datetime-local" name="date_signal"  value="<?php echo date('Y-m-d\TH:i'); ?>" required>
-                
-               
                 <label>Description:</label>
                 <textarea name="description" placeholder="Entrer votre texte ici" required></textarea>
-
                 <button type="submit">Signaler</button>
-                
             </form>
         </div>
     </div>
+
+    <!-- ✅ Conteneur toast -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <?php if (!empty($success_message)) : ?>
+    <script>
+        function showSuccess(message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.classList.add('toast');
+            toast.innerHTML = `
+                <div class="icon">✔</div>
+                <div class="toast-message">${message}</div>
+                <button class="close" onclick="this.parentElement.remove()">×</button>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 4000);
+        }
+        // ✅ Appeler la fonction avec le message PHP
+        showSuccess("<?= $success_message ?>");
+    </script>
+    <?php endif; ?>
 </body>
 </html>

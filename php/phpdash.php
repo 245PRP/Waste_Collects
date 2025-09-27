@@ -141,12 +141,12 @@ $points = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <i class="fa-solid fa-house" style="color: #cfa13b"></i><span>Mes Tournées de Ramassage</span>
       </a>
       <a class="menu-item" href="../php/info.php">
-        <i class="fa-solid fa-house" style="color: #cfa13b"></i><span>Mes Informations </span>
+        <i class="fa-solid fa-user" style="color: #cfa13b"></i><span>Mes Informations </span>
       </a>
       <?php if ($retards<=0) {?>
         
       <a class="menu-item" href="../php/statut.php">
-        <i class="fa-solid fa-house" style="color: #cfa13b"></i><span>Statuts de mes Tournées </span>
+        <i class="fa-solid fa-list" style="color: #cfa13b"></i><span>Statuts de mes Tournées </span>
       </a>
       <?php } else{ ?>
         

@@ -54,7 +54,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $mail->Host       = 'smtp.gmail.com';
                 $mail->SMTPAuth   = true;
                 $mail->Username   = 'prunellendonkeu@gmail.com';
-                $mail->Password   = 'immd pfrm cunu mjgl';
+                $mail->Password   = 'rgkl bedx jgaf ynzj';
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port       = 587;
 
@@ -64,7 +64,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $mail->Subject = "Nouveau signalement";
                 $mail->Body    = nl2br($email_message);
                 $mail->send();
-            } catch (Exception $e) {}
+            } catch (Exception $e) {echo "Erreur d'envoi du mail  ".$e->getMessage();}
         }
 
         // ✅ Définir le message de succès

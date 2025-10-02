@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mail->Host       = 'smtp.gmail.com';
                 $mail->SMTPAuth   = true;
                 $mail->Username   = 'prunellendonkeu@gmail.com'; // remplace par ton email
-                $mail->Password   = 'immd pfrm cunu mjgl'; // mot de passe application
+                $mail->Password   = 'rgkl bedx jgaf ynzj'; // mot de passe application
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port       = 587;
 
@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 $mail->send();
             } catch (Exception $e) {
-                // Tu peux logger l’erreur si besoin
+                echo "Erreur d'envoi du mail ".$e->getMessage();
             }
         }
 
